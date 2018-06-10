@@ -1,0 +1,64 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+	}
+}
+
+plugins {
+	id 'com.github.johnrengelman.shadow' version '2.0.4'
+	id 'application'
+	id 'java'
+	id 'idea'
+}
+
+group = 'com.projectswg.launcher'
+version = '0.1'
+
+mainClassName = 'com.projectswg.launcher.core.Launcher'
+sourceCompatibility = 9
+targetCompatibility = 9
+
+sourceSets {
+	utility {
+		
+	}
+}
+
+shadowJar {
+	baseName = "Launcher"
+	classifier = null
+	version = null
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+	compile project(':pswgcommon')
+	compile project(':pswgcommonfx')
+	compile project(':client-holocore')
+	compile project(':forwarder')
+	compile 'net.openhft:zero-allocation-hashing:0.8'
+	compile group: 'me.joshlarson', name: 'fast-json', version: '2.2.3'
+	compile 'de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2'
+	
+	utilityCompile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.59'
+	utilityCompile group: 'me.joshlarson', name: 'fast-json', version: '2.2.3'
+	utilityCompile 'net.openhft:zero-allocation-hashing:0.8'
+	
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task CreateUpdateListTask(type: ShadowJar) {
+	archiveName = 'CreateUpdateList.jar'
+	manifest.attributes 'Main-Class': 'com.projectswg.launcher.utility.CreateUpdateList'
+	from sourceSets.utility.output
+	configurations = [project.configurations.utilityRuntime]
+	exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
+}

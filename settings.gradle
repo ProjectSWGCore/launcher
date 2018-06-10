@@ -1,0 +1,5 @@
+rootProject.name = 'launcher'
+include 'pswgcommon'
+include 'pswgcommonfx'
+include 'client-holocore'
+include 'forwarder'

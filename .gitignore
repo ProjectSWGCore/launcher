@@ -1,0 +1,11 @@
+.settings
+
+# IDE-based
+Launcher.iml
+out
+.idea
+
+# Gradle
+build
+.gradle
+
