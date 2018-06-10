@@ -1,0 +1,17 @@
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.ServerListController" xmlns:fx="http://javafx.com/fxml">
+	<ImageView fx:id="headerImage">
+		<Image url="/theme/projectswg/graphics/headers/server-table.png"/>
+	</ImageView>
+	<TableView fx:id="serverTable" focusTraversable="false">
+		<placeholder>
+			<Label text="%noServers"/>
+		</placeholder>
+	</TableView>
+	<Region prefHeight="5" />
+	<FlowPane fx:id="cardContainer" styleClass="card-container" VBox.vgrow="ALWAYS" />
+</VBox>

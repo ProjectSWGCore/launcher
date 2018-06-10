@@ -1,0 +1,22 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.projectswg.launcher.core.resources.gui.settings.SettingsGeneralController">
+	<Label text="%settings.general.header" styleClass="settings-header-label" />
+	<HBox styleClass="settings-row">
+		<Label text="%settings.general.sound" />
+		<CheckBox fx:id="soundCheckbox" disable="true" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.general.theme" />
+		<ComboBox fx:id="themeComboBox" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.general.locale" />
+		<ComboBox fx:id="localeComboBox" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.general.wine" />
+		<TextField fx:id="wineTextField" disable="true" />
+		<Button fx:id="wineSelectionButton" styleClass="pathSelection" />
+	</HBox>
+</VBox>

@@ -1,0 +1,179 @@
+#root, .background {
+	-fx-background: #393939;
+	-fx-background-color: #393939;
+	-fx-text-fill: white;
+}
+
+.separator *.line {
+	-fx-border-style: solid;
+	-fx-border-width: 3 0 0 0;
+	-fx-border-color: #d5d5d5;
+	-fx-padding: 5 0 0 0;
+}
+
+.scroll-pane {
+	-fx-background: transparent;
+}
+
+/* Cards */
+	
+	.card-container {
+		-fx-hgap: 10px;
+		-fx-vgap: 10px;
+	}
+	
+	.card {
+		-fx-background-color: #454545;
+		-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+		-fx-vbar-policy: as-needed;
+		-fx-hbar-policy: never;
+	}
+	
+	.card-content {
+		-fx-text-fill: white;
+		-fx-vgap: 5px;
+		-fx-alignment: top-center;
+		-fx-padding: 5px;
+	}
+	
+	.card .title {
+		-fx-font-weight: bold;
+		-fx-text-fill: white;
+		-fx-wrap-text: true;
+		-fx-font-size: 14px;
+	}
+	
+	.card .separator {
+		-fx-padding: 0 0 10 0;
+	}
+	
+	.card .description {
+		-fx-text-fill: white;
+		-fx-wrap-text: true;
+		-fx-font-size: 12px;
+	}
+
+/* Tabs*/
+	
+	.tab-pane {
+		-fx-tab-min-width: 40px;
+		-fx-tab-min-height: 40px;
+	    -fx-tab-max-width: 40px;
+	    -fx-tab-max-height: 40px;
+	}
+	
+	.tab-pane *.tab-header-area *.tab-header-background {
+		-fx-background-color: #313131;
+	}
+	
+	.tab-pane *.tab-content-area {
+		-fx-background-color: #393939;
+		-fx-padding: 8px;
+	}
+	
+	.tab-pane .tab {
+		-fx-background-color: #313131;
+		-fx-text-fill: gray;
+		-fx-padding: 5px;
+	}
+	
+	.tab-pane .tab .scroll-pane {
+		-fx-fit-to-height: true;
+	}
+	
+	.tab-pane .tab:selected {
+	    -fx-background-color: #d5d5d5;
+	    -fx-focus-color: transparent;
+		-fx-text-color: black;
+	}
+	
+	.tab-pane .tab-label {
+		-fx-content-display: graphic-only;
+	}
+	
+/* Servers */
+	
+	.server-play-cell {
+		-fx-alignment: center;
+	}
+	
+	#serverTable {
+		-fx-background-color: #4e4e4e;
+		-fx-border-width: 0;
+		-fx-padding: 0px;
+		-fx-max-height: 225px;
+	}
+	
+	#serverTable .table-column {
+		-fx-font-weight: bold;
+	}
+	
+	#serverTable .table-row-cell {
+		-fx-pref-height: 75px;
+	}
+	
+	#serverTable .table-row-cell:filled:selected { 
+	  -fx-background: -fx-control-inner-background ;
+	  -fx-background-color: -fx-table-cell-border-color, -fx-background ;
+	  -fx-background-insets: 0, 0 0 1 0 ;
+	  -fx-table-cell-border-color: derive(-fx-color, 5%);
+	}
+	
+	#serverTable .table-row-cell:odd:filled:selected {
+	  -fx-background: -fx-control-inner-background-alt ;
+	}
+	
+	.table-view .column-header .label {
+		-fx-text-alignment: center;
+		-fx-text-fill: black;
+	}
+	
+	.left-table-cell {
+		-fx-alignment: center-left;
+		-fx-text-fill: black;
+	}
+	
+	.center-table-cell {
+		-fx-alignment: center;
+		-fx-text-fill: black;
+	}
+	
+/* Settings */
+	
+	.settings-header-label {
+		-fx-font-size: 14px;
+		-fx-font-weight: bold;
+		-fx-text-fill: white;
+		-fx-padding: 5 0 10 5;
+	}
+	
+	.settings-row {
+		-fx-pref-height: 25px;
+		-fx-padding: 5 5 5 50;
+		-fx-hgap: 5px;
+	}
+	
+	.settings-row .label {
+		-fx-pref-width: 100px;
+		-fx-pref-height: 25px;
+		-fx-text-fill: white;
+	}
+	
+	.settings-row .check-box {
+		-fx-pref-height: 25px;
+		-fx-text-fill: white;
+	}
+	
+	.settings-row .pathSelection {
+		-fx-min-width: 25px;
+		-fx-max-width: 25px;
+		-fx-min-height: 25px;
+		-fx-max-height: 25px;
+		-icons-color: black;
+	}
+	
+	.settings-row .combo-box,
+	.settings-row .text-field {
+		-fx-pref-width: 400px;
+		-fx-pref-height: 20px;
+	}

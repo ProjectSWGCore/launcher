@@ -1,0 +1,20 @@
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.NavigationController" xmlns:fx="http://javafx.com/fxml">
+	<stylesheets>
+		<URL value="@/theme/projectswg/css/theme.css"/>
+	</stylesheets>
+	<TabPane fx:id="tabPane" side="LEFT" VBox.vgrow="ALWAYS">
+		<Tab fx:id="announcementsTab" styleClass="background" text="%announcements" closable="false">
+			<fx:include source="announcements.fxml"/>
+		</Tab>
+		<Tab fx:id="serverListTab" styleClass="background" text="%servers" closable="false">
+			<fx:include source="servers.fxml"/>
+		</Tab>
+		<Tab fx:id="settingsTab" styleClass="background" text="%settings" closable="false">
+			<fx:include source="settings.fxml"/>
+		</Tab>
+	</TabPane>
+</VBox>
