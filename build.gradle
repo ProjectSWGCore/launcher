@@ -10,7 +10,6 @@ buildscript {
 }
 
 plugins {
-	id 'com.github.johnrengelman.shadow' version '2.0.4'
 	id 'application'
 	id 'java'
 	id 'idea'
@@ -18,10 +17,11 @@ plugins {
 
 group = 'com.projectswg.launcher'
 version = '0.1'
-
 mainClassName = 'com.projectswg.launcher.core.Launcher'
 sourceCompatibility = 9
 targetCompatibility = 9
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceSets {
 	utility {
