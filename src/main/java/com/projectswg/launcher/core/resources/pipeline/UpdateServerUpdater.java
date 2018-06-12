@@ -65,7 +65,7 @@ public class UpdateServerUpdater {
 			try (JSONOutputStream out = new JSONOutputStream(new FileOutputStream(localFileList))) {
 				out.writeArray(files);
 			} catch (IOException e) {
-				Log.e("Failed to write updated file list to disk for update server %s", info.getName());
+				Log.e("Failed to write updated file list to disk for update server %s (%s: %s)", info.getName(), e.getClass().getName(), e.getMessage());
 			}
 		} catch (IOException | JSONException e) {
 			Log.w("Failed to retrieve latest file list for update server %s (%s: %s). Falling back on local copy...", e.getClass().getName(), e.getMessage(), info.getName());
