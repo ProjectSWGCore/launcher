@@ -1,6 +1,5 @@
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.*?>
 <VBox fx:id="root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.projectswg.launcher.core.resources.gui.settings.SettingsLoginController">
 	<Label text="%settings.login.header" styleClass="settings-header-label" />
 	<HBox styleClass="settings-row">

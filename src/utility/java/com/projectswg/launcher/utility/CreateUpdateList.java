@@ -24,8 +24,6 @@ import me.joshlarson.json.JSONArray;
 import me.joshlarson.json.JSONObject;
 import me.joshlarson.json.JSONOutputStream;
 import net.openhft.hashing.LongHashFunction;
-import org.bouncycastle.jcajce.provider.digest.SHA3;
-import org.bouncycastle.util.encoders.Hex;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,8 +31,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 import java.util.zip.Adler32;
 

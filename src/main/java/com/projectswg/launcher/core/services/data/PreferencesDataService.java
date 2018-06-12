@@ -20,7 +20,6 @@
 
 package com.projectswg.launcher.core.services.data;
 
-import me.joshlarson.jlcommon.log.Log;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.general.GeneralData;
 import com.projectswg.launcher.core.resources.data.general.LauncherTheme;
@@ -30,6 +29,7 @@ import com.projectswg.launcher.core.resources.data.update.UpdateData;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import me.joshlarson.jlcommon.concurrency.ScheduledThreadPool;
 import me.joshlarson.jlcommon.control.Service;
+import me.joshlarson.jlcommon.log.Log;
 
 import java.io.File;
 import java.io.IOException;

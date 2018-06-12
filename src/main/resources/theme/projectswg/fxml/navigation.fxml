@@ -1,8 +1,6 @@
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-<?import javafx.scene.control.Tooltip?>
 <VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.NavigationController" xmlns:fx="http://javafx.com/fxml">
 	<stylesheets>
 		<URL value="@/theme/projectswg/css/theme.css"/>

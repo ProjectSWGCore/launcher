@@ -1,6 +1,6 @@
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ScrollPane?>
 <ScrollPane fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.SettingsController" xmlns:fx="http://javafx.com/fxml" fitToWidth="true">
 	<VBox styleClass="background">
 		<fx:include source="settings/settings_general.fxml" />
