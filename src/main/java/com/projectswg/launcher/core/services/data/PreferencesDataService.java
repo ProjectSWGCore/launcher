@@ -21,6 +21,7 @@
 package com.projectswg.launcher.core.services.data;
 
 import com.projectswg.launcher.core.resources.data.LauncherData;
+import com.projectswg.launcher.core.resources.data.forwarder.ForwarderData;
 import com.projectswg.launcher.core.resources.data.general.GeneralData;
 import com.projectswg.launcher.core.resources.data.general.LauncherTheme;
 import com.projectswg.launcher.core.resources.data.login.LoginData;
@@ -100,6 +101,7 @@ public class PreferencesDataService extends Service {
 			loadGeneralPreferences(data.getGeneral());
 			loadUpdatePreferences(data.getUpdate());
 			loadLoginPreferences(data.getLogin());
+			loadForwarderPreferences(data.getForwarderData());
 		} catch (BackingStoreException e) {
 			Log.w(e);
 		}
@@ -110,6 +112,7 @@ public class PreferencesDataService extends Service {
 			saveGeneralPreferences(data.getGeneral());
 			saveUpdatePreferences(data.getUpdate());
 			saveLoginPreferences(data.getLogin());
+			saveForwarderPreferences(data.getForwarderData());
 			preferences.flush();
 		} catch (BackingStoreException e) {
 			Log.w(e);
@@ -186,6 +189,18 @@ public class PreferencesDataService extends Service {
 			updateServerPreferences.put("basePath", server.getBasePath());
 			updateServerPreferences.put("localPath", server.getLocalPath());
 		}
+	}
+	
+	private void loadForwarderPreferences(ForwarderData forwarderData) {
+		Preferences generalPreferences = preferences.node("forwarder");
+		ifPresent(generalPreferences, "sendInterval", Integer::valueOf, forwarderData::setSendInterval);
+		ifPresent(generalPreferences, "sendMax", Integer::valueOf, forwarderData::setSendMax);
+	}
+	
+	private void saveForwarderPreferences(ForwarderData forwarderData) {
+		Preferences generalPreferences = preferences.node("forwarder");
+		generalPreferences.putInt("sendInterval", forwarderData.getSendInterval());
+		generalPreferences.putInt("sendMax", forwarderData.getSendMax());
 	}
 	
 	private static <T> void ifPresent(Preferences p, String key, Function<String, T> transform, Consumer<T> setter) {

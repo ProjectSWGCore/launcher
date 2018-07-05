@@ -30,13 +30,11 @@ import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import me.joshlarson.jlcommon.concurrency.beans.ConcurrentBase;
 import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -55,7 +53,7 @@ public class ServerListController implements FXMLController {
 	private TableView<LoginServer> serverTable;
 	
 	@FXML
-	private Pane cardContainer;
+	private CardContainer cardContainer;
 	
 	public ServerListController() {
 		
@@ -68,6 +66,7 @@ public class ServerListController implements FXMLController {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		headerImage.fitWidthProperty().bind(root.widthProperty());
 		addCenterAlignColumn(resources.getString("servers.column.name"), COL_WIDTH_LARGE, t->t, s -> new ConcurrentString(s.getName()));
 		addCenterAlignColumn(resources.getString("servers.column.remoteStatus"), COL_WIDTH_LARGE, t->t, s -> s.getInstanceInfo().getLoginStatusProperty());
 		addCenterAlignColumn(resources.getString("servers.column.localStatus"), COL_WIDTH_LARGE, resources::getString, s -> s.getInstanceInfo().getUpdateStatusProperty());
@@ -84,14 +83,8 @@ public class ServerListController implements FXMLController {
 	}
 	
 	private void updateAnnouncements() {
-		List<Card> cards = LauncherData.getInstance().getAnnouncements().getServerListCards();
-		for (Card card : cards) {
-			card.minWidthProperty().bind(cardContainer.widthProperty().subtract(10).divide(2));
-			card.maxWidthProperty().bind(cardContainer.widthProperty().subtract(10).divide(2));
-			card.minHeightProperty().bind(cardContainer.heightProperty());
-			card.maxHeightProperty().bind(cardContainer.heightProperty());
-		}
-		cardContainer.getChildren().setAll(cards);
+		cardContainer.clearCards();
+		LauncherData.getInstance().getAnnouncements().getServerListCards().forEach(cardContainer::addCard);
 	}
 	
 	private <S, T> void addCenterAlignColumn(String name, double prefWidth, Function<S, T> conv, Function<LoginServer, ConcurrentBase<S>> transform) {

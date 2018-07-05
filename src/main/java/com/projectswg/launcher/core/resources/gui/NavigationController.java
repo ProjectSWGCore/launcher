@@ -25,6 +25,7 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.paint.Color;
@@ -39,6 +40,8 @@ public class NavigationController implements FXMLController {
 	@FXML
 	public Tab announcementsTab, serverListTab, settingsTab;
 	@FXML
+	private Label selectedTabLabel;
+	@FXML
 	private Parent root;
 	
 	public NavigationController() {
@@ -52,10 +55,12 @@ public class NavigationController implements FXMLController {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		tabPane.getSelectionModel().select(serverListTab);
 		announcementsTab.setGraphic(createGlyph(FontAwesomeIcon.NEWSPAPER_ALT));
 		serverListTab.setGraphic(createGlyph(FontAwesomeIcon.SERVER));
 		settingsTab.setGraphic(createGlyph(FontAwesomeIcon.SLIDERS));
+		
+		tabPane.getSelectionModel().selectedItemProperty().addListener((obs, prev, tab) -> selectedTabLabel.setText(tab.getText()));
+		tabPane.getSelectionModel().select(serverListTab);
 	}
 	
 	private static FontAwesomeIconView createGlyph(FontAwesomeIcon icon) {

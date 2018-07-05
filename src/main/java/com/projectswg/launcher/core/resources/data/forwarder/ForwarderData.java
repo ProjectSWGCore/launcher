@@ -18,47 +18,48 @@
  *                                                                                 *
  ***********************************************************************************/
 
-package com.projectswg.launcher.core.resources.gui;
+package com.projectswg.launcher.core.resources.data.forwarder;
 
-import com.projectswg.common.javafx.FXMLController;
-import com.projectswg.launcher.core.resources.data.LauncherData;
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import me.joshlarson.jlcommon.concurrency.beans.ConcurrentInteger;
+import org.jetbrains.annotations.NotNull;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
-public class AnnouncementsController implements FXMLController {
+public class ForwarderData {
 	
-	private static final String LISTENER_KEY = "announcements-controller";
+	public static final int DEFAULT_SEND_INTERVAL = 20;
+	public static final int DEFAULT_SEND_MAX = 100;
 	
-	@FXML
-	private Region root;
+	private final ConcurrentInteger sendInterval;
+	private final ConcurrentInteger sendMax;
 	
-	@FXML
-	private CardContainer cardContainer;
-	
-	public AnnouncementsController() {
-		
+	public ForwarderData() {
+		this.sendInterval = new ConcurrentInteger(DEFAULT_SEND_INTERVAL);
+		this.sendMax = new ConcurrentInteger(DEFAULT_SEND_MAX);
 	}
 	
-	@Override
-	public Parent getRoot() {
-		return root;
+	@NotNull
+	public ConcurrentInteger getSendIntervalProperty() {
+		return sendInterval;
 	}
 	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
-		updateAnnouncements();
+	@NotNull
+	public ConcurrentInteger getSendMaxProperty() {
+		return sendMax;
 	}
 	
-	private void updateAnnouncements() {
-		cardContainer.clearCards();
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().forEach(cardContainer::addCard);
+	public int getSendInterval() {
+		return sendInterval.getValue();
+	}
+	
+	public int getSendMax() {
+		return sendMax.getValue();
+	}
+	
+	public void setSendInterval(int sendInterval) {
+		this.sendInterval.set(sendInterval);
+	}
+	
+	public void setSendMax(int sendMax) {
+		this.sendMax.set(sendMax);
 	}
 	
 }

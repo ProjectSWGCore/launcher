@@ -25,6 +25,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import me.joshlarson.jlcommon.log.Log;
 
@@ -48,11 +49,11 @@ public class Card extends ScrollPane {
 		this.link = null;
 		
 		headerImage.setPreserveRatio(true);
-		headerImage.fitWidthProperty().bind(maxWidthProperty().subtract(10));
+		headerImage.fitWidthProperty().bind(widthProperty().subtract(10));
 		headerImage.setFitHeight(100);
 		
-		title.maxWidthProperty().bind(maxWidthProperty().subtract(10));
-		description.maxWidthProperty().bind(maxWidthProperty().subtract(10));
+		title.maxWidthProperty().bind(widthProperty().subtract(10));
+		description.maxWidthProperty().bind(widthProperty().subtract(10));
 		
 		getStyleClass().add("card");
 		content.getStyleClass().add("card-content");
@@ -60,7 +61,7 @@ public class Card extends ScrollPane {
 		title.getStyleClass().add("title");
 		description.getStyleClass().add("description");
 		
-		content.getChildren().addAll(headerImage, title, new Separator(), description);
+		content.getChildren().addAll(headerImage, createPaddedRegion(), title, new Separator(), description);
 		setContent(content);
 		setFitToWidth(true);
 		setOnMouseClicked(e -> gotoLink());
@@ -91,6 +92,12 @@ public class Card extends ScrollPane {
 		if (link == null)
 			return;
 		LauncherUI.getInstance().getHostServices().showDocument(link);
+	}
+	
+	private static Region createPaddedRegion() {
+		Region region = new Region();
+		region.setPrefHeight(10);
+		return region;
 	}
 	
 }

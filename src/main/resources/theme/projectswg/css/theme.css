@@ -15,6 +15,11 @@
 	-fx-background: transparent;
 }
 
+#selectedTabLabel {
+	-fx-font-size: 40px;
+	-fx-rotate: -90;
+}
+
 /* Cards */
 	
 	.card-container {
@@ -154,7 +159,7 @@
 	}
 	
 	.settings-row .label {
-		-fx-pref-width: 100px;
+		-fx-pref-width: 125px;
 		-fx-pref-height: 25px;
 		-fx-text-fill: white;
 	}

@@ -20,45 +20,33 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
-import com.projectswg.common.javafx.FXMLController;
-import com.projectswg.launcher.core.resources.data.LauncherData;
-import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.FlowPane;
 
-import java.net.URL;
-import java.util.List;
-import java.util.ResourceBundle;
-
-public class AnnouncementsController implements FXMLController {
+public class CardContainer extends FlowPane {
 	
-	private static final String LISTENER_KEY = "announcements-controller";
-	
-	@FXML
-	private Region root;
-	
-	@FXML
-	private CardContainer cardContainer;
-	
-	public AnnouncementsController() {
+	public CardContainer() {
 		
 	}
 	
-	@Override
-	public Parent getRoot() {
-		return root;
+	public void clearCards() {
+		getChildren().clear();
 	}
 	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
-		updateAnnouncements();
+	public void addCard(Card card) {
+		widthProperty().addListener((obs, prev, next) -> card.setPrefWidth(createCardSize(next.doubleValue())));
+		heightProperty().addListener((obs, prev, next) -> card.setPrefHeight(createCardSize(next.doubleValue())));
+		card.setPrefWidth(createCardSize(getWidth()));
+		card.setPrefHeight(createCardSize(getHeight()));
+		getChildren().add(card);
 	}
 	
-	private void updateAnnouncements() {
-		cardContainer.clearCards();
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().forEach(cardContainer::addCard);
+	private static double createCardSize(double max) {
+		int count = (int) (max / 300);
+		if (count <= 0)
+			count = 1;
+		if (System.getProperty("os.name").startsWith("Windows"))
+			return (int) ((max - (count-1)*10) / count);
+		return (max - (count-1)*10) / count;
 	}
 	
 }

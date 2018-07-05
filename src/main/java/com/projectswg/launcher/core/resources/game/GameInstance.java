@@ -22,6 +22,7 @@ package com.projectswg.launcher.core.resources.game;
 
 import com.projectswg.forwarder.Forwarder;
 import com.projectswg.forwarder.Forwarder.ForwarderData;
+import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.login.LoginServer;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import javafx.application.Platform;
@@ -62,6 +63,8 @@ public class GameInstance {
 		data.setAddress(new InetSocketAddress(server.getAddress(), server.getPort()));
 		data.setUsername(server.getUsername());
 		data.setPassword(server.getPassword());
+		data.setOutboundTunerInterval(LauncherData.getInstance().getForwarderData().getSendInterval());
+		data.setOutboundTunerMaxSend(LauncherData.getInstance().getForwarderData().getSendMax());
 		forwarderThread.start();
 	}
 	

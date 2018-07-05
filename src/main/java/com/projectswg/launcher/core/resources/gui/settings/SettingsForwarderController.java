@@ -18,30 +18,30 @@
  *                                                                                 *
  ***********************************************************************************/
 
-package com.projectswg.launcher.core.resources.gui;
+package com.projectswg.launcher.core.resources.gui.settings;
 
 import com.projectswg.common.javafx.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
+import com.projectswg.launcher.core.resources.data.forwarder.ForwarderData;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class AnnouncementsController implements FXMLController {
-	
-	private static final String LISTENER_KEY = "announcements-controller";
+public class SettingsForwarderController implements FXMLController {
 	
 	@FXML
-	private Region root;
-	
+	private Parent root;
 	@FXML
-	private CardContainer cardContainer;
+	private TextField sendIntervalTextField, sendMaxTextField;
+	@FXML
+	private Button resetButton;
 	
-	public AnnouncementsController() {
+	public SettingsForwarderController() {
 		
 	}
 	
@@ -52,13 +52,33 @@ public class AnnouncementsController implements FXMLController {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
-		updateAnnouncements();
+		sendIntervalTextField.setText(Integer.toString(LauncherData.getInstance().getForwarderData().getSendInterval()));
+		sendMaxTextField.setText(Integer.toString(LauncherData.getInstance().getForwarderData().getSendMax()));
+		sendIntervalTextField.textProperty().addListener(this::handleInterval);
+		sendMaxTextField.textProperty().addListener(this::handleMax);
+		
+		resetButton.setOnAction(e -> {
+			sendIntervalTextField.setText(Integer.toString(ForwarderData.DEFAULT_SEND_INTERVAL));
+			sendMaxTextField.setText(Integer.toString(ForwarderData.DEFAULT_SEND_MAX));
+		});
 	}
 	
-	private void updateAnnouncements() {
-		cardContainer.clearCards();
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().forEach(cardContainer::addCard);
+	private void handleInterval(@SuppressWarnings("unused") ObservableValue<? extends String> prop, @SuppressWarnings("unused") String prev, String next) {
+		String filtered = next.replaceAll("\\D*", "");
+		if (!filtered.equals(next)) {
+			sendIntervalTextField.setText(filtered);
+			next = filtered;
+		}
+		LauncherData.getInstance().getForwarderData().setSendInterval(Integer.parseInt(next));
+	}
+	
+	private void handleMax(@SuppressWarnings("unused") ObservableValue<? extends String> prop, @SuppressWarnings("unused") String prev, String next) {
+		String filtered = next.replaceAll("\\D*", "");
+		if (!filtered.equals(next)) {
+			sendMaxTextField.setText(filtered);
+			next = filtered;
+		}
+		LauncherData.getInstance().getForwarderData().setSendMax(Integer.parseInt(next));
 	}
 	
 }

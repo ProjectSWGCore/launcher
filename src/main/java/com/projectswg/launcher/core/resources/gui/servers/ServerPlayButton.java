@@ -70,7 +70,6 @@ public class ServerPlayButton extends Button {
 			return;
 		server.getStatusProperty().addListener(this, this::update);
 		update(server.getStatus());
-		setDisable(false);
 	}
 	
 	private void teardown(UpdateServer server) {

@@ -1,8 +1,8 @@
+<?import com.projectswg.launcher.core.resources.gui.CardContainer?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.ServerListController" xmlns:fx="http://javafx.com/fxml">
@@ -15,5 +15,5 @@
 		</placeholder>
 	</TableView>
 	<Region prefHeight="5" />
-	<FlowPane fx:id="cardContainer" styleClass="card-container" VBox.vgrow="ALWAYS" />
+	<CardContainer fx:id="cardContainer" styleClass="card-container" VBox.vgrow="ALWAYS" />
 </VBox>

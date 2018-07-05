@@ -1,5 +1,5 @@
-<?import javafx.scene.layout.FlowPane?>
+<?import com.projectswg.launcher.core.resources.gui.CardContainer?>
 <?import javafx.scene.layout.VBox?>
 <VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.AnnouncementsController" xmlns:fx="http://javafx.com/fxml">
-	<FlowPane fx:id="cardContainer" styleClass="card-container" VBox.vgrow="ALWAYS" />
+	<CardContainer fx:id="cardContainer" styleClass="card-container" VBox.vgrow="ALWAYS" />
 </VBox>

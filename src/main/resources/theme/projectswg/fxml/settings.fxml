@@ -8,5 +8,7 @@
 		<fx:include source="settings/settings_login.fxml" />
 		<Separator />
 		<fx:include source="settings/settings_update.fxml" />
+		<Separator />
+		<fx:include source="settings/settings_forwarder.fxml" />
 	</VBox>
 </ScrollPane>

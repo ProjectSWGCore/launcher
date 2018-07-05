@@ -22,6 +22,7 @@ package com.projectswg.launcher.core.resources.data;
 
 import com.projectswg.launcher.core.Launcher;
 import com.projectswg.launcher.core.resources.data.announcements.AnnouncementsData;
+import com.projectswg.launcher.core.resources.data.forwarder.ForwarderData;
 import com.projectswg.launcher.core.resources.data.general.GeneralData;
 import com.projectswg.launcher.core.resources.data.login.LoginData;
 import com.projectswg.launcher.core.resources.data.update.UpdateData;
@@ -32,7 +33,7 @@ import java.util.prefs.Preferences;
 
 public class LauncherData {
 	
-	public static final String VERSION = "1.0.14";
+	public static final String VERSION = "1.1.3";
 	public static final String UPDATE_ADDRESS = "login1.projectswg.com";
 	
 	private static final LauncherData INSTANCE = new LauncherData();
@@ -42,6 +43,7 @@ public class LauncherData {
 	private final GeneralData generalData;
 	private final LoginData loginData;
 	private final UpdateData updateData;
+	private final ForwarderData forwarderData;
 	
 	public LauncherData() {
 		this.stage = new AtomicReference<>(null);
@@ -49,6 +51,7 @@ public class LauncherData {
 		this.generalData = new GeneralData();
 		this.loginData = new LoginData();
 		this.updateData = new UpdateData();
+		this.forwarderData = new ForwarderData();
 	}
 	
 	public Preferences getPreferences() {
@@ -73,6 +76,10 @@ public class LauncherData {
 	
 	public UpdateData getUpdate() {
 		return updateData;
+	}
+	
+	public ForwarderData getForwarderData() {
+		return forwarderData;
 	}
 	
 	public void setStage(Stage stage) {

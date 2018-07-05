@@ -1,11 +1,12 @@
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
 <?import java.net.URL?>
-<VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.NavigationController" xmlns:fx="http://javafx.com/fxml">
+<?import javafx.scene.Group?>
+<AnchorPane fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.NavigationController" xmlns:fx="http://javafx.com/fxml" prefWidth="800" prefHeight="640">
 	<stylesheets>
 		<URL value="@/theme/projectswg/css/theme.css"/>
 	</stylesheets>
-	<TabPane fx:id="tabPane" side="LEFT" VBox.vgrow="ALWAYS">
+	<TabPane fx:id="tabPane" side="LEFT" VBox.vgrow="ALWAYS" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
 		<Tab fx:id="announcementsTab" styleClass="background" text="%announcements" closable="false">
 			<tooltip>
 				<Tooltip text="%announcements" />
@@ -25,4 +26,7 @@
 			<fx:include source="settings.fxml"/>
 		</Tab>
 	</TabPane>
-</VBox>
+	<Group AnchorPane.bottomAnchor="15" AnchorPane.leftAnchor="5">
+		<Label fx:id="selectedTabLabel" />
+	</Group>
+</AnchorPane>

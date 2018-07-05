@@ -63,7 +63,7 @@ public class AnnouncementService extends Service {
 	@Override
 	public boolean start() {
 		executor.start();
-		executor.executeWithFixedDelay(0, TimeUnit.MINUTES.toMillis(30), this::update);
+		executor.executeWithFixedDelay(3000, TimeUnit.MINUTES.toMillis(30), this::update);
 		return true;
 	}
 	

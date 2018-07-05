@@ -25,7 +25,6 @@ import com.projectswg.launcher.core.resources.data.update.UpdateServer.RequiredF
 import com.projectswg.launcher.core.resources.data.update.UpdateServer.UpdateServerStatus;
 import me.joshlarson.jlcommon.log.Log;
 import me.joshlarson.json.*;
-import net.openhft.hashing.LongHashFunction;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,8 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -110,14 +107,7 @@ public class UpdateServerUpdater {
 	private static boolean isValidFile(RequiredFile file) {
 		File localFile = file.getLocalPath();
 		long length = localFile.length();
-		if (!localFile.isFile() || length != file.getLength())
-			return false;
-		try (FileChannel fc = FileChannel.open(localFile.toPath())) {
-			return file.getHash() == LongHashFunction.xx().hashBytes(fc.map(MapMode.READ_ONLY, 0, length));
-		} catch (IOException e) {
-			Log.w("Failed to hash file: %s. Defaulting to invalid", file);
-			return false;
-		}
+		return localFile.isFile() && length == file.getLength();
 	}
 	
 	private static RequiredFile jsonObjectToRequiredFile(UpdateServerDownloaderInfo info, JSONObject obj) {
