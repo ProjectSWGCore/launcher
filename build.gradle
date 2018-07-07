@@ -13,13 +13,14 @@ plugins {
 	id 'application'
 	id 'java'
 	id 'idea'
+	id "edu.sc.seis.macAppBundle" version "2.2.1"
 }
 
 group = 'com.projectswg.launcher'
 version = '0.1'
 mainClassName = 'com.projectswg.launcher.core.Launcher'
-sourceCompatibility = 9
-targetCompatibility = 9
+sourceCompatibility = 10
+targetCompatibility = 10
 
 apply plugin: 'com.github.johnrengelman.shadow'
 
@@ -33,6 +34,12 @@ shadowJar {
 	baseName = "Launcher"
 	classifier = null
 	version = null
+}
+
+macAppBundle {
+	appName = "ProjectSWG Launcher"
+	icon = "src/main/resources/theme/projectswg/graphics/ProjectSWGLaunchpad.icns"
+	mainClassName = "${->project.mainClassName}"
 }
 
 repositories {
