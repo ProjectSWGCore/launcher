@@ -20,6 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
+import javafx.application.Platform;
 import javafx.scene.layout.FlowPane;
 
 public class CardContainer extends FlowPane {
@@ -38,6 +39,7 @@ public class CardContainer extends FlowPane {
 		card.setPrefWidth(createCardSize(getWidth()));
 		card.setPrefHeight(createCardSize(getHeight()));
 		getChildren().add(card);
+		Platform.runLater(this::applyCss);	// Ensures CSS is applied for contained elements
 	}
 	
 	private static double createCardSize(double max) {

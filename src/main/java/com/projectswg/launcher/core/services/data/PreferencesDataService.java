@@ -70,30 +70,62 @@ public class PreferencesDataService extends Service {
 	}
 	
 	private void createDefaults() {
-		UpdateServer defaultUpdateServer = data.getUpdate().getServers().stream().filter(s -> s.getName().equals("ProjectSWG")).findFirst().orElse(null);
-		if (defaultUpdateServer == null) {
-			defaultUpdateServer = new UpdateServer("ProjectSWG");
-			defaultUpdateServer.setAddress("login1.projectswg.com");
-			defaultUpdateServer.setPort(80);
-			defaultUpdateServer.setBasePath("/launcher/patch");
-			data.getUpdate().addServer(defaultUpdateServer);
+		createPSWG();
+		createTeamSWG();
+
+		if (data.getGeneral().getWine() == null || data.getGeneral().getWine().isEmpty())
+			data.getGeneral().setWine(getWinePath());
+	}
+	
+	private void createPSWG() {
+		UpdateServer pswgUpdateServer = data.getUpdate().getServers().stream().filter(s -> s.getName().equals("ProjectSWG")).findFirst().orElse(null);
+		if (pswgUpdateServer == null) {
+			pswgUpdateServer = new UpdateServer("ProjectSWG");
+			pswgUpdateServer.setAddress("login1.projectswg.com");
+			pswgUpdateServer.setPort(80);
+			pswgUpdateServer.setBasePath("/launcher/patch");
+			pswgUpdateServer.setGameVersion("NGE");
+			data.getUpdate().addServer(pswgUpdateServer);
+		} else if (pswgUpdateServer.getGameVersion().isEmpty()) {
+			// Migrate existing persisted update servers
+			pswgUpdateServer.setGameVersion("NGE");
 		}
 		if (data.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("ProjectSWG"))) {
 			LoginServer defaultLive = new LoginServer("ProjectSWG");
 			defaultLive.setAddress("login1.projectswg.com");
 			defaultLive.setPort(44453);
-			defaultLive.setUpdateServer(defaultUpdateServer);
+			defaultLive.setUpdateServer(pswgUpdateServer);
 			data.getLogin().addServer(defaultLive);
 		}
+		
 		if (data.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("localhost"))) {
 			LoginServer defaultLocalhost = new LoginServer("localhost");
 			defaultLocalhost.setAddress("localhost");
 			defaultLocalhost.setPort(44463);
-			defaultLocalhost.setUpdateServer(defaultUpdateServer);
+			defaultLocalhost.setUpdateServer(pswgUpdateServer);
 			data.getLogin().addServer(defaultLocalhost);
 		}
-		if (data.getGeneral().getWine() == null || data.getGeneral().getWine().isEmpty())
-			data.getGeneral().setWine(getWinePath());
+	}
+	
+	private void createTeamSWG() {
+		UpdateServer teamswgUpdateServer = data.getUpdate().getServers().stream().filter(s -> s.getName().equals("TeamSWG")).findFirst().orElse(null);
+		
+		if (teamswgUpdateServer == null) {
+			teamswgUpdateServer = new UpdateServer("TeamSWG");
+			teamswgUpdateServer.setAddress("patch.teamswg.com");
+			teamswgUpdateServer.setPort(80);
+			teamswgUpdateServer.setBasePath("/launcher/patch");
+			teamswgUpdateServer.setGameVersion("CU");
+			data.getUpdate().addServer(teamswgUpdateServer);
+		}
+		
+		if (data.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("Constrictor"))) {
+			LoginServer constrictor = new LoginServer("Constrictor");
+			constrictor.setAddress("game.teamswg.com");
+			constrictor.setPort(44463);
+			constrictor.setUpdateServer(teamswgUpdateServer);
+			data.getLogin().addServer(constrictor);
+		}
 	}
 	
 	private void loadPreferences() {
@@ -175,6 +207,7 @@ public class PreferencesDataService extends Service {
 			ifPresent(updateServerPreferences, "port", Integer::parseInt, server::setPort);
 			ifPresent(updateServerPreferences, "basePath", server::setBasePath);
 			ifPresent(updateServerPreferences, "localPath", server::setLocalPath);
+			ifPresent(updateServerPreferences, "gameVersion", server::setGameVersion);
 			updateData.getServers().add(server);
 		}
 	}
@@ -188,6 +221,7 @@ public class PreferencesDataService extends Service {
 			updateServerPreferences.putInt("port", server.getPort());
 			updateServerPreferences.put("basePath", server.getBasePath());
 			updateServerPreferences.put("localPath", server.getLocalPath());
+			updateServerPreferences.put("gameVersion", server.getGameVersion());
 		}
 	}
 	
