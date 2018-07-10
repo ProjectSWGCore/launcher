@@ -66,7 +66,7 @@ public class NavigationController implements FXMLController {
 	private static FontAwesomeIconView createGlyph(FontAwesomeIcon icon) {
 		FontAwesomeIconView view = new FontAwesomeIconView(icon);
 		view.setGlyphSize(24);
-		view.setFill(Color.GRAY);
+		view.setFill(Color.LIGHTGRAY);
 		return view;
 	}
 	

@@ -46,6 +46,8 @@ public class ServerPlayLabel extends Label {
 		this.bundle = bundle;
 		this.server = new AtomicReference<>(null);
 		this.progressBar = progressBar;
+		
+		setManaged(false);
 	}
 	
 	public void setUpdateServer(UpdateServer server) {
@@ -74,12 +76,15 @@ public class ServerPlayLabel extends Label {
 			case SCANNING:
 				progressBar.setValue(-1);
 				internalSetText(bundle.getString("servers.action_info.empty"));
+				setManaged(false);
 				break;
 			case REQUIRES_DOWNLOAD:
+				setManaged(true);
 				progressBar.setValue(-1);
 				internalSetText(calculateDownloadSize(server.getRequiredFiles()) + " " + bundle.getString("servers.action_info.required"));
 				break;
 			case DOWNLOADING:
+				setManaged(true);
 				progressBar.addListener("server-play-label", p -> internalSetText(String.format("%.2f%% %s", p*100, bundle.getString("servers.action_info.progress"))));
 				if (progressBar.get() == -1)
 					internalSetText(bundle.getString("servers.action_info.downloading"));

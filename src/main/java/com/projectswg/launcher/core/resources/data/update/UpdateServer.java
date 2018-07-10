@@ -38,6 +38,7 @@ public class UpdateServer {
 	private final ConcurrentString localPath;
 	private final ConcurrentList<RequiredFile> requiredFiles;
 	private final ConcurrentReference<UpdateServerStatus> status;
+	private final ConcurrentString gameVersion;
 	
 	public UpdateServer(@NotNull String name) {
 		this.name = name;
@@ -47,6 +48,7 @@ public class UpdateServer {
 		this.localPath = new ConcurrentString("");
 		this.requiredFiles = new ConcurrentList<>();
 		this.status = new ConcurrentReference<>(UpdateServerStatus.UNKNOWN);
+		this.gameVersion = new ConcurrentString("");
 	}
 	
 	@NotNull
@@ -77,6 +79,11 @@ public class UpdateServer {
 	@NotNull
 	public ConcurrentReference<UpdateServerStatus> getStatusProperty() {
 		return status;
+	}
+	
+	@NotNull
+	public String getGameVersion() {
+		return gameVersion.get();
 	}
 	
 	@NotNull
@@ -127,6 +134,10 @@ public class UpdateServer {
 	
 	public void setStatus(@NotNull UpdateServerStatus status) {
 		this.status.set(status);
+	}
+	
+	public void setGameVersion(@NotNull String gameVersion) {
+		this.gameVersion.set(gameVersion);
 	}
 	
 	@Override

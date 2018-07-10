@@ -33,6 +33,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -84,6 +85,7 @@ public class SettingsGeneralController implements FXMLController {
 	
 	private static FontAwesomeIconView createFolderGlyph() {
 		FontAwesomeIconView view = new FontAwesomeIconView(FontAwesomeIcon.FOLDER_ALT);
+		view.setFill(Color.WHITE);
 		view.setGlyphSize(16);
 		return view;
 	}

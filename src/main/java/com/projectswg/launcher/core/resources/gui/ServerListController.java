@@ -41,6 +41,7 @@ import java.util.function.Function;
 public class ServerListController implements FXMLController {
 	
 	private static final String LISTENER_KEY = "server-list-controller";
+	private static final double COL_WIDTH_MEDIUM = 110;
 	private static final double COL_WIDTH_LARGE = 150;
 	
 	@FXML
@@ -68,6 +69,7 @@ public class ServerListController implements FXMLController {
 	public void initialize(URL location, ResourceBundle resources) {
 		headerImage.fitWidthProperty().bind(root.widthProperty());
 		addCenterAlignColumn(resources.getString("servers.column.name"), COL_WIDTH_LARGE, t->t, s -> new ConcurrentString(s.getName()));
+		addCenterAlignColumn(resources.getString("servers.column.gameVersion"), COL_WIDTH_MEDIUM, t->t, s -> new ConcurrentString(s.getUpdateServer().getGameVersion()));
 		addCenterAlignColumn(resources.getString("servers.column.remoteStatus"), COL_WIDTH_LARGE, t->t, s -> s.getInstanceInfo().getLoginStatusProperty());
 		addCenterAlignColumn(resources.getString("servers.column.localStatus"), COL_WIDTH_LARGE, resources::getString, s -> s.getInstanceInfo().getUpdateStatusProperty());
 		addPlayColumn(resources);

@@ -20,9 +20,11 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
@@ -33,27 +35,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class Card extends ScrollPane {
+public class Card extends VBox {
 	
 	private final VBox content;
 	private final ImageView headerImage;
 	private final Label title;
-	private final Label description;
+	private final TextArea description;
 	private String link;
 	
 	public Card() {
 		this.content = new VBox();
 		this.headerImage = new ImageView();
 		this.title = new Label("");
-		this.description = new Label("");
+		this.description = new TextArea("");
 		this.link = null;
 		
-		headerImage.setPreserveRatio(true);
-		headerImage.fitWidthProperty().bind(widthProperty().subtract(10));
-		headerImage.setFitHeight(100);
+		description.setEditable(false);
 		
-		title.maxWidthProperty().bind(widthProperty().subtract(10));
-		description.maxWidthProperty().bind(widthProperty().subtract(10));
+		headerImage.setPreserveRatio(true);
+		headerImage.setFitHeight(108);
+		headerImage.fitWidthProperty().bind(widthProperty());
+		
+		title.maxWidthProperty().bind(widthProperty());
+		description.maxWidthProperty().bind(widthProperty());
 		
 		getStyleClass().add("card");
 		content.getStyleClass().add("card-content");
@@ -61,10 +65,8 @@ public class Card extends ScrollPane {
 		title.getStyleClass().add("title");
 		description.getStyleClass().add("description");
 		
-		content.getChildren().addAll(headerImage, createPaddedRegion(), title, new Separator(), description);
-		setContent(content);
-		setFitToWidth(true);
-		setOnMouseClicked(e -> gotoLink());
+		content.getChildren().addAll(headerImage, title, new Separator(), description);
+		getChildren().add(content);
 	}
 	
 	public void setHeaderImage(File image) {
@@ -85,12 +87,21 @@ public class Card extends ScrollPane {
 	
 	public void setLink(String link) {
 		this.link = link;
+		
+		if (headerImage == null) {
+			// In case there's no image, for whatever reason
+			return;
+		}
+		
+		// Clicking the image takes you to the link
+		Tooltip tooltip = new Tooltip(link);
+		Tooltip.install(headerImage, tooltip);
+		
+		headerImage.setCursor(Cursor.HAND);
+		headerImage.setOnMouseClicked(e -> gotoLink());
 	}
 	
 	private void gotoLink() {
-		String link = this.link;
-		if (link == null)
-			return;
 		LauncherUI.getInstance().getHostServices().showDocument(link);
 	}
 	
