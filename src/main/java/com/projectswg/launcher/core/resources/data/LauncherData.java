@@ -33,7 +33,7 @@ import java.util.prefs.Preferences;
 
 public class LauncherData {
 	
-	public static final String VERSION = "1.1.3";
+	public static final String VERSION = "1.1.4";
 	public static final String UPDATE_ADDRESS = "login1.projectswg.com";
 	
 	private static final LauncherData INSTANCE = new LauncherData();

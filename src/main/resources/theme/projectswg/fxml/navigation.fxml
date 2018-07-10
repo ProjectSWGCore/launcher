@@ -2,7 +2,7 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 <?import javafx.scene.Group?>
-<AnchorPane fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.NavigationController" xmlns:fx="http://javafx.com/fxml" prefWidth="800" prefHeight="640">
+<AnchorPane fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.NavigationController" xmlns:fx="http://javafx.com/fxml" prefWidth="825" prefHeight="640">
 	<stylesheets>
 		<URL value="@/theme/projectswg/css/theme.css"/>
 	</stylesheets>

@@ -5,11 +5,13 @@
 	<HBox styleClass="settings-row">
 		<Label text="%settings.update.name" />
 		<ComboBox fx:id="nameComboBox" />
+		<Region prefWidth="10" />
 		<Button fx:id="scanButton" text="%settings.update.scan" />
 	</HBox>
 	<HBox styleClass="settings-row">
 		<Label text="%settings.update.address" />
 		<TextField fx:id="addressTextField" />
+		<Region prefWidth="10" />
 		<Button fx:id="clientOptionsButton" text="%settings.update.clientOptions"/>
 	</HBox>
 	<HBox styleClass="settings-row">
@@ -23,6 +25,7 @@
 	<HBox styleClass="settings-row">
 		<Label text="%settings.update.localPath" />
 		<TextField fx:id="localPathTextField" disable="true" />
+		<Region prefWidth="10" />
 		<Button fx:id="localPathSelectionButton" styleClass="pathSelection" />
 	</HBox>
 </VBox>

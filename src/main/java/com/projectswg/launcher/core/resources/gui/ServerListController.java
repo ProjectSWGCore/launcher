@@ -35,6 +35,7 @@ import me.joshlarson.jlcommon.concurrency.beans.ConcurrentBase;
 import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
 
 import java.net.URL;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 
@@ -82,6 +83,7 @@ public class ServerListController implements FXMLController {
 	
 	private void updateServerTable() {
 		serverTable.getItems().setAll(LauncherData.getInstance().getLogin().getServers());
+		serverTable.getItems().sort(Comparator.comparing(LoginServer::getName));
 	}
 	
 	private void updateAnnouncements() {

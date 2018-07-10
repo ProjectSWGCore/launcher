@@ -202,7 +202,7 @@
 	}
 
 	.server-play-cell .button {
-		-fx-pref-width: 70px;
+		-fx-pref-width: 90px;
 	}
 
 	#serverTable {
@@ -244,7 +244,7 @@
 	}
 
 	.settings-row .button {
-		-fx-pref-width: 125px;
+		-fx-pref-width: 150px;
 	}
 	
 	.settings-row .label {
