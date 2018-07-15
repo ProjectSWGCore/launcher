@@ -19,8 +19,8 @@ plugins {
 group = 'com.projectswg.launcher'
 version = '0.1'
 mainClassName = 'com.projectswg.launcher.core.Launcher'
-sourceCompatibility = 10
-targetCompatibility = 10
+sourceCompatibility = 9
+targetCompatibility = 9
 
 apply plugin: 'com.github.johnrengelman.shadow'
 
