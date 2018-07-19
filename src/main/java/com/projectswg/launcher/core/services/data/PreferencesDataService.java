@@ -226,15 +226,22 @@ public class PreferencesDataService extends Service {
 	}
 	
 	private void loadForwarderPreferences(ForwarderData forwarderData) {
-		Preferences generalPreferences = preferences.node("forwarder");
-		ifPresent(generalPreferences, "sendInterval", Integer::valueOf, forwarderData::setSendInterval);
-		ifPresent(generalPreferences, "sendMax", Integer::valueOf, forwarderData::setSendMax);
+		Preferences forwarderPreferences = preferences.node("forwarder");
+		int version = forwarderPreferences.getInt("version", 0);
+		if (version < 1) {
+			forwarderData.setSendInterval(ForwarderData.DEFAULT_SEND_INTERVAL);
+			forwarderData.setSendMax(ForwarderData.DEFAULT_SEND_MAX);
+		} else {
+			ifPresent(forwarderPreferences, "sendInterval", Integer::valueOf, forwarderData::setSendInterval);
+			ifPresent(forwarderPreferences, "sendMax", Integer::valueOf, forwarderData::setSendMax);
+		}
 	}
 	
 	private void saveForwarderPreferences(ForwarderData forwarderData) {
-		Preferences generalPreferences = preferences.node("forwarder");
-		generalPreferences.putInt("sendInterval", forwarderData.getSendInterval());
-		generalPreferences.putInt("sendMax", forwarderData.getSendMax());
+		Preferences forwarderPreferences = preferences.node("forwarder");
+		forwarderPreferences.putInt("sendInterval", forwarderData.getSendInterval());
+		forwarderPreferences.putInt("sendMax", forwarderData.getSendMax());
+		forwarderPreferences.putInt("version", 1);
 	}
 	
 	private static <T> void ifPresent(Preferences p, String key, Function<String, T> transform, Consumer<T> setter) {

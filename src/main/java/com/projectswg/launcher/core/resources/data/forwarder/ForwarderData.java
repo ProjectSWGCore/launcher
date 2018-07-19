@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class ForwarderData {
 	
-	public static final int DEFAULT_SEND_INTERVAL = 20;
-	public static final int DEFAULT_SEND_MAX = 100;
+	public static final int DEFAULT_SEND_INTERVAL = 1000;
+	public static final int DEFAULT_SEND_MAX = 400;
 	
 	private final ConcurrentInteger sendInterval;
 	private final ConcurrentInteger sendMax;

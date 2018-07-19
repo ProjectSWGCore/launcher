@@ -21,6 +21,7 @@
 package com.projectswg.launcher.core.resources.gui;
 
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.layout.FlowPane;
 
 public class CardContainer extends FlowPane {
@@ -46,7 +47,7 @@ public class CardContainer extends FlowPane {
 		int count = (int) (max / 300);
 		if (count <= 0)
 			count = 1;
-		return (int) ((max - (count-1)*10) / count);
+		return (int) ((max - (count-1)*10) / count - 0.5);
 	}
 	
 }
