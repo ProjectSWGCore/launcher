@@ -169,11 +169,14 @@ public class AnnouncementService extends Service {
 			os = os.toLowerCase(Locale.US);
 			switch (os) {
 				case "windows":
-					return currentOs.contains("win");
+					if (!currentOs.contains("win"))
+						return false;
 				case "mac":
-					return currentOs.contains("mac");
+					if (!currentOs.contains("mac"))
+						return false;
 				case "linux":
-					return !currentOs.contains("win") && !currentOs.contains("mac");
+					if (currentOs.contains("win") || currentOs.contains("mac"))
+						return false;
 			}
 		}
 		// Inclusive
