@@ -38,6 +38,7 @@ shadowJar {
 
 macAppBundle {
 	appName = "ProjectSWG Launcher"
+	dmgName = "Launcher-mac"
 	icon = "src/main/resources/theme/projectswg/graphics/ProjectSWGLaunchpad.icns"
 	mainClassName = "${->project.mainClassName}"
 }
