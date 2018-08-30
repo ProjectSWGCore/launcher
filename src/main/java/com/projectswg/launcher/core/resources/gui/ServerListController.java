@@ -23,6 +23,7 @@ package com.projectswg.launcher.core.resources.gui;
 import com.projectswg.common.javafx.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.login.LoginServer;
+import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import com.projectswg.launcher.core.resources.gui.servers.ServerPlayCell;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -70,7 +71,7 @@ public class ServerListController implements FXMLController {
 	public void initialize(URL location, ResourceBundle resources) {
 		headerImage.fitWidthProperty().bind(root.widthProperty());
 		addCenterAlignColumn(resources.getString("servers.column.name"), COL_WIDTH_LARGE, t->t, s -> new ConcurrentString(s.getName()));
-		addCenterAlignColumn(resources.getString("servers.column.gameVersion"), COL_WIDTH_MEDIUM, t->t, s -> new ConcurrentString(s.getUpdateServer().getGameVersion()));
+		addCenterAlignColumn(resources.getString("servers.column.gameVersion"), COL_WIDTH_MEDIUM, t->t, s -> {UpdateServer us = s.getUpdateServer(); return new ConcurrentString(us == null ? "N/A" : us.getGameVersion()); });
 		addCenterAlignColumn(resources.getString("servers.column.remoteStatus"), COL_WIDTH_LARGE, t->t, s -> s.getInstanceInfo().getLoginStatusProperty());
 		addCenterAlignColumn(resources.getString("servers.column.localStatus"), COL_WIDTH_LARGE, resources::getString, s -> s.getInstanceInfo().getUpdateStatusProperty());
 		addPlayColumn(resources);
