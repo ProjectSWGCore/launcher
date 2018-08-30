@@ -47,21 +47,20 @@ public class Launcher {
 	}
 	
 	private void run() {
-		IntentManager intentManager = new IntentManager(Runtime.getRuntime().availableProcessors());
-		intentManager.initialize();
-		IntentManager.setInstance(intentManager);
-		services.clear();
-		services.add(new DataManager());
-		services.add(new LauncherManager());
-		for (ServiceBase s : services)
-			s.setIntentManager(intentManager);
-		Manager.start(services);
-		Manager.run(services, 100);
-		Collections.reverse(services); // Allows the data services to stay alive longer
-		Manager.stop(services);
-		intentManager.terminate();
-		IntentManager.setInstance(null);
-		ThreadUtilities.printActiveThreads();
+		try (IntentManager intentManager = new IntentManager(Runtime.getRuntime().availableProcessors())) {
+			IntentManager.setInstance(intentManager);
+			services.clear();
+			services.add(new DataManager());
+			services.add(new LauncherManager());
+			for (ServiceBase s : services)
+				s.setIntentManager(intentManager);
+			Manager.start(services);
+			Manager.run(services, 100);
+			Collections.reverse(services); // Allows the data services to stay alive longer
+			Manager.stop(services);
+			IntentManager.setInstance(null);
+			ThreadUtilities.printActiveThreads();
+		}
 	}
 	
 	public static void main(String [] args) {
