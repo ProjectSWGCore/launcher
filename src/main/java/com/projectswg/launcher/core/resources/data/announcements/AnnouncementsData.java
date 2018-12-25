@@ -21,7 +21,7 @@
 package com.projectswg.launcher.core.resources.data.announcements;
 
 import com.projectswg.launcher.core.resources.gui.Card;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentList;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentList;
 
 public class AnnouncementsData {
 	

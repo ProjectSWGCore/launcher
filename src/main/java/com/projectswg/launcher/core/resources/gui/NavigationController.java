@@ -20,20 +20,26 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
-import com.projectswg.common.javafx.FXMLController;
+import com.projectswg.launcher.core.resources.data.LauncherData;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
+import me.joshlarson.jlcommon.javafx.control.FXMLService;
 
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class NavigationController implements FXMLController {
+public class NavigationController extends FXMLService implements FXMLController {
 	
 	@FXML
 	private TabPane tabPane;
@@ -44,8 +50,11 @@ public class NavigationController implements FXMLController {
 	@FXML
 	private Parent root;
 	
+	private Stage primaryStage;
+	
 	public NavigationController() {
-		
+		this.primaryStage = LauncherData.INSTANCE.getStage();
+		LauncherData.INSTANCE.getGeneral().getLocaleProperty().addSimpleListener("navigation-reinflate", this::updateLocale);
 	}
 	
 	@Override
@@ -61,6 +70,39 @@ public class NavigationController implements FXMLController {
 		
 		tabPane.getSelectionModel().selectedItemProperty().addListener((obs, prev, tab) -> selectedTabLabel.setText(tab.getText()));
 		tabPane.getSelectionModel().select(serverListTab);
+		
+		setupStage();
+	}
+	
+	@Override
+	public boolean stop() {
+		LauncherData.INSTANCE.getGeneral().getLocaleProperty().removeListener("navigation-reinflate");
+		this.primaryStage = null;
+		return true;
+	}
+	
+	@Override
+	public boolean isOperational() {
+		return primaryStage == null || primaryStage.isShowing();
+	}
+	
+	private void setupStage() {
+		if (this.primaryStage == null) {
+			Stage primaryStage = new Stage();
+			primaryStage.setTitle("ProjectSWG Launcher");
+			primaryStage.setScene(new Scene(root));
+			primaryStage.setResizable(false);
+			primaryStage.show();
+			LauncherData.INSTANCE.setApplication(getApplication());
+			LauncherData.INSTANCE.setStage(primaryStage);
+			this.primaryStage = primaryStage;
+		} else {
+			this.primaryStage.setScene(new Scene(root));
+		}
+	}
+	
+	private void updateLocale(Locale locale) {
+		new Thread(() -> reinflate(locale), "reinflator").start();
 	}
 	
 	private static FontAwesomeIconView createGlyph(FontAwesomeIcon icon) {

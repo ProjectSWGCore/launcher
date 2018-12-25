@@ -111,7 +111,7 @@ public enum ProcessExecutor {
 	
 	private File getWine() {
 		{
-			String wineStr = LauncherData.getInstance().getGeneral().getWine();
+			String wineStr = LauncherData.INSTANCE.getGeneral().getWine();
 			if (wineStr != null) {
 				File wine = new File(wineStr);
 				if (wine.isFile()) {

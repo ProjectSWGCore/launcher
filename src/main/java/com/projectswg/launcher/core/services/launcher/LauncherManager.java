@@ -25,7 +25,6 @@ import me.joshlarson.jlcommon.control.ManagerStructure;
 
 @ManagerStructure(children = {
 		GameService.class,
-		UserInterfaceService.class
 })
 public class LauncherManager extends Manager {
 	

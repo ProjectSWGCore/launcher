@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
-import com.projectswg.common.javafx.FXMLController;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -52,13 +52,13 @@ public class AnnouncementsController implements FXMLController {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
+		LauncherData.INSTANCE.getAnnouncements().getAnnouncementCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
 		updateAnnouncements();
 	}
 	
 	private void updateAnnouncements() {
 		cardContainer.clearCards();
-		LauncherData.getInstance().getAnnouncements().getAnnouncementCards().forEach(cardContainer::addCard);
+		LauncherData.INSTANCE.getAnnouncements().getAnnouncementCards().forEach(cardContainer::addCard);
 	}
 	
 }

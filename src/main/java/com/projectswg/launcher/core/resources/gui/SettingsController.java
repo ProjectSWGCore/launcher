@@ -20,9 +20,9 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
-import com.projectswg.common.javafx.FXMLController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
 
 import java.net.URL;
 import java.util.ResourceBundle;

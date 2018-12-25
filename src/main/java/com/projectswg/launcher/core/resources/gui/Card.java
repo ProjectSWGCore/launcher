@@ -20,6 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
+import com.projectswg.launcher.core.resources.data.LauncherData;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -102,7 +103,7 @@ public class Card extends VBox {
 	}
 	
 	private void gotoLink() {
-		LauncherUI.getInstance().getHostServices().showDocument(link);
+		LauncherData.INSTANCE.getApplication().getHostServices().showDocument(link);
 	}
 	
 	private static Region createPaddedRegion() {

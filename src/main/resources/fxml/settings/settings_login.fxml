@@ -26,4 +26,10 @@
 		<Label text="%settings.login.updateServer" />
 		<ComboBox fx:id="updateServerComboBox" />
 	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.verify_server" />
+		<CheckBox fx:id="verifyServerCheckBox" />
+		<Region prefWidth="10" />
+		<Label text="%settings.login.verify_server_disclaimer" style="-fx-font-size: 10px;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+	</HBox>
 </VBox>

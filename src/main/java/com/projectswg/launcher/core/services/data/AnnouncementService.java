@@ -83,7 +83,7 @@ public class AnnouncementService extends Service {
 		List<CardData> serverCards = parseCards(announcements.getArray("servers")).stream().map(this::downloadImage).collect(Collectors.toList());
 		
 		Platform.runLater(() -> {
-			AnnouncementsData data = LauncherData.getInstance().getAnnouncements();
+			AnnouncementsData data = LauncherData.INSTANCE.getAnnouncements();
 			data.getAnnouncementCards().clear();
 			data.getAnnouncementCards().addAll(announcementCards.stream().map(this::dataToCard).collect(Collectors.toList()));
 			data.getServerListCards().clear();
@@ -146,13 +146,8 @@ public class AnnouncementService extends Service {
 		if (destination.isFile())
 			return;
 		Log.d("Downloading image '%s' to '%s'", url, destination);
-		try (ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream()); FileChannel fc = FileChannel.open(destination.toPath(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
-			ByteBuffer bb = ByteBuffer.allocateDirect(8*1024);
-			while (rbc.read(bb) >= 0) {
-				bb.flip();
-				fc.write(bb);
-				bb.clear();
-			}
+		try {
+			new URL(url).openStream().transferTo(new FileOutputStream(destination));
 			Log.t("Completed download of %s", destination);
 		} catch (IOException e) {
 			Log.e("Failed to download file %s from %s with error: %s: %s", destination, url, e.getClass().getName(), e.getMessage());
@@ -166,8 +161,7 @@ public class AnnouncementService extends Service {
 		String os = filter.getString("os");
 		if (os != null) {
 			String currentOs = System.getProperty("os.name").toLowerCase(Locale.US);
-			os = os.toLowerCase(Locale.US);
-			switch (os) {
+			switch (os.toLowerCase(Locale.US)) {
 				case "windows":
 					if (!currentOs.contains("win"))
 						return false;
@@ -213,7 +207,7 @@ public class AnnouncementService extends Service {
 		
 		Log.t("Retrieving latest announcements...");
 		JSONObject announcements;
-		try (JSONInputStream in = new JSONInputStream(new URL("http", LauncherData.UPDATE_ADDRESS, 80, "/launcher/announcements.json").openConnection().getInputStream())) {
+		try (JSONInputStream in = new JSONInputStream(new URL("http", LauncherData.UPDATE_ADDRESS, 80, "/launcher/announcements.json").openStream())) {
 			announcements = in.readObject();
 			try (JSONOutputStream out = new JSONOutputStream(new FileOutputStream(localFileList))) {
 				out.writeObject(announcements);

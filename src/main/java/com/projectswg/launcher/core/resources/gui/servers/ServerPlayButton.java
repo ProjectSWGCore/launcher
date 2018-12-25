@@ -28,7 +28,7 @@ import com.projectswg.launcher.core.resources.intents.DownloadPatchIntent;
 import com.projectswg.launcher.core.resources.intents.LaunchGameIntent;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentDouble;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentDouble;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -68,7 +68,7 @@ public class ServerPlayButton extends Button {
 	private void setup(UpdateServer server) {
 		if (server == null)
 			return;
-		server.getStatusProperty().addListener(this, this::update);
+		server.getStatusProperty().addSimpleListener(this, this::update);
 		update(server.getStatus());
 	}
 	

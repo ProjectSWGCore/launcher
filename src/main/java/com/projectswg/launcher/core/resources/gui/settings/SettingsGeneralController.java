@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui.settings;
 
-import com.projectswg.common.javafx.FXMLController;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.general.GeneralData;
 import com.projectswg.launcher.core.resources.data.general.LauncherTheme;
@@ -56,6 +56,8 @@ public class SettingsGeneralController implements FXMLController {
 	private TextField wineTextField;
 	@FXML
 	private Button wineSelectionButton;
+	@FXML
+	private CheckBox adminCheckBox;
 	
 	@Override
 	public Parent getRoot() {
@@ -64,15 +66,9 @@ public class SettingsGeneralController implements FXMLController {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		GeneralData data = LauncherData.getInstance().getGeneral();
+		GeneralData data = LauncherData.INSTANCE.getGeneral();
 		
 		wineSelectionButton.setGraphic(createFolderGlyph());
-		
-		soundCheckbox.selectedProperty().addListener((obs, prev, s) -> data.setSound(s));
-		themeComboBox.valueProperty().addListener((obs, prev, v) -> data.setTheme(v));
-		localeComboBox.valueProperty().addListener((obs, prev, v) -> data.setLocale(v));
-		wineTextField.textProperty().addListener((obs, prev, t) -> data.setWine(t));
-		wineSelectionButton.setOnAction(this::processWineSelectionButtonAction);
 		
 		themeComboBox.getItems().setAll(LauncherTheme.values());
 		localeComboBox.getItems().setAll(Locale.ENGLISH, Locale.GERMAN);
@@ -81,6 +77,14 @@ public class SettingsGeneralController implements FXMLController {
 		themeComboBox.setValue(data.getTheme());
 		localeComboBox.setValue(data.getLocale());
 		wineTextField.setText(data.getWine());
+		adminCheckBox.setSelected(data.isAdmin());
+		
+		soundCheckbox.selectedProperty().addListener((obs, prev, s) -> data.setSound(s));
+		themeComboBox.valueProperty().addListener((obs, prev, v) -> data.setTheme(v));
+		localeComboBox.valueProperty().addListener((obs, prev, v) -> data.setLocale(v));
+		wineTextField.textProperty().addListener((obs, prev, t) -> data.setWine(t));
+		wineSelectionButton.setOnAction(this::processWineSelectionButtonAction);
+		adminCheckBox.selectedProperty().addListener((obs, prev, a) -> data.setAdmin(a));
 	}
 	
 	private static FontAwesomeIconView createFolderGlyph() {
@@ -104,7 +108,7 @@ public class SettingsGeneralController implements FXMLController {
 	private static File chooseOpenFile(String title) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
-		File file = fileChooser.showOpenDialog(LauncherData.getInstance().getStage());
+		File file = fileChooser.showOpenDialog(LauncherData.INSTANCE.getStage());
 		if (file == null || !file.isFile())
 			return null;
 		return file;

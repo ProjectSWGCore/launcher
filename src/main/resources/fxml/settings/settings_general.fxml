@@ -20,4 +20,10 @@
 		<Region prefWidth="10" />
 		<Button fx:id="wineSelectionButton" styleClass="pathSelection" />
 	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.general.admin" />
+		<CheckBox fx:id="adminCheckBox" />
+		<Region prefWidth="10" />
+		<Label text="%settings.general.admin_disclaimer" style="-fx-font-size: 10px;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+	</HBox>
 </VBox>

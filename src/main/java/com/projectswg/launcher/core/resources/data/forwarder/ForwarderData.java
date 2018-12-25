@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.data.forwarder;
 
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentInteger;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentInteger;
 import org.jetbrains.annotations.NotNull;
 
 public class ForwarderData {

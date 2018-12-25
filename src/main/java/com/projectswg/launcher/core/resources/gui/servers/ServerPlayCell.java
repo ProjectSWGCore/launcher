@@ -24,7 +24,7 @@ import com.projectswg.launcher.core.resources.data.login.LoginServer;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.VBox;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentDouble;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentDouble;
 
 import java.util.ResourceBundle;
 
@@ -50,7 +50,7 @@ public class ServerPlayCell extends TableCell<LoginServer, LoginServer> {
 		}
 		super.updateItem(item, empty);
 		if (item != null) {
-			item.getUpdateServerProperty().addListener(this, updateServer -> update(item, updateServer));
+			item.getUpdateServerProperty().addSimpleListener(this, updateServer -> update(item, updateServer));
 		}
 		update(item, item==null?null:item.getUpdateServer());
 		if (empty) {

@@ -26,18 +26,19 @@ import com.projectswg.launcher.core.resources.data.forwarder.ForwarderData;
 import com.projectswg.launcher.core.resources.data.general.GeneralData;
 import com.projectswg.launcher.core.resources.data.login.LoginData;
 import com.projectswg.launcher.core.resources.data.update.UpdateData;
+import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 
-public class LauncherData {
+public enum LauncherData {
+	INSTANCE;
 	
-	public static final String VERSION = "1.1.7";
+	public static final String VERSION = "1.1.13";
 	public static final String UPDATE_ADDRESS = "login1.projectswg.com";
 	
-	private static final LauncherData INSTANCE = new LauncherData();
-	
+	private final AtomicReference<Application> application;
 	private final AtomicReference<Stage> stage;
 	private final AnnouncementsData announcementsData;
 	private final GeneralData generalData;
@@ -45,7 +46,8 @@ public class LauncherData {
 	private final UpdateData updateData;
 	private final ForwarderData forwarderData;
 	
-	public LauncherData() {
+	LauncherData() {
+		this.application = new AtomicReference<>(null);
 		this.stage = new AtomicReference<>(null);
 		this.announcementsData = new AnnouncementsData();
 		this.generalData = new GeneralData();
@@ -56,6 +58,10 @@ public class LauncherData {
 	
 	public Preferences getPreferences() {
 		return Preferences.userNodeForPackage(Launcher.class);
+	}
+	
+	public Application getApplication() {
+		return application.get();
 	}
 	
 	public Stage getStage() {
@@ -82,6 +88,10 @@ public class LauncherData {
 		return forwarderData;
 	}
 	
+	public void setApplication(Application application) {
+		this.application.set(application);
+	}
+	
 	public void setStage(Stage stage) {
 		this.stage.set(stage);
 	}
@@ -89,4 +99,5 @@ public class LauncherData {
 	public static LauncherData getInstance() {
 		return INSTANCE;
 	}
+	
 }

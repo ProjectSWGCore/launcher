@@ -20,9 +20,9 @@
 
 package com.projectswg.launcher.core.resources.data.general;
 
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentBoolean;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentReference;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentBoolean;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentReference;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,12 +34,14 @@ public class GeneralData {
 	private final ConcurrentReference<LauncherTheme> theme;
 	private final ConcurrentReference<Locale> locale;
 	private final ConcurrentString wine;
+	private final ConcurrentBoolean admin;
 	
 	public GeneralData() {
 		this.sound = new ConcurrentBoolean();
 		this.theme = new ConcurrentReference<>(LauncherTheme.DEFAULT);
 		this.locale = new ConcurrentReference<>(Locale.getDefault());
 		this.wine = new ConcurrentString();
+		this.admin = new ConcurrentBoolean();
 	}
 	
 	@NotNull
@@ -62,6 +64,11 @@ public class GeneralData {
 		return wine;
 	}
 	
+	@NotNull
+	public ConcurrentBoolean getAdminProperty() {
+		return admin;
+	}
+	
 	public boolean isSound() {
 		return sound.get();
 	}
@@ -81,6 +88,10 @@ public class GeneralData {
 		return wine.get();
 	}
 	
+	public boolean isAdmin() {
+		return admin.get();
+	}
+	
 	public void setSound(boolean sound) {
 		this.sound.set(sound);
 	}
@@ -95,6 +106,10 @@ public class GeneralData {
 	
 	public void setWine(@Nullable String wine) {
 		this.wine.set(wine);
+	}
+	
+	public void setAdmin(boolean admin) {
+		this.admin.set(admin);
 	}
 	
 }

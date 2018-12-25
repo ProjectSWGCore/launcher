@@ -27,9 +27,9 @@ import com.projectswg.launcher.core.resources.intents.CancelDownloadIntent;
 import com.projectswg.launcher.core.resources.intents.DownloadPatchIntent;
 import com.projectswg.launcher.core.resources.intents.RequestScanIntent;
 import me.joshlarson.jlcommon.concurrency.ThreadPool;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentLong;
 import me.joshlarson.jlcommon.control.IntentHandler;
 import me.joshlarson.jlcommon.control.Service;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentLong;
 import me.joshlarson.jlcommon.log.Log;
 
 import java.io.File;

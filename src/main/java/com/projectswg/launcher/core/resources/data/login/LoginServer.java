@@ -22,10 +22,7 @@ package com.projectswg.launcher.core.resources.data.login;
 
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer.UpdateServerStatus;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentBase;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentInteger;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentReference;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
+import me.joshlarson.jlcommon.javafx.beans.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +34,7 @@ public class LoginServer {
 	private final ConcurrentString username;
 	private final ConcurrentString password;
 	private final ConcurrentReference<UpdateServer> updateServer;
+	private final ConcurrentBoolean verifyServer;
 	private final LoginServerInstanceInfo instanceInfo;
 	
 	public LoginServer(@NotNull String name) {
@@ -46,9 +44,10 @@ public class LoginServer {
 		this.username = new ConcurrentString("");
 		this.password = new ConcurrentString("");
 		this.updateServer = new ConcurrentReference<>(null);
+		this.verifyServer = new ConcurrentBoolean(true);
 		this.instanceInfo = new LoginServerInstanceInfo();
 		
-		updateServer.addListener("login-server-"+name, this::updateServerListener);
+		updateServer.addSimpleListener("login-server-"+name, this::updateServerListener);
 		instanceInfo.setUpdateStatus(UpdateServerStatus.UNKNOWN.getFriendlyName());
 		updateServerListener(updateServer, null, null);
 	}
@@ -71,6 +70,11 @@ public class LoginServer {
 	@NotNull
 	public ConcurrentString getPasswordProperty() {
 		return password;
+	}
+	
+	@NotNull
+	public ConcurrentBoolean getVerifyServerProperty() {
+		return verifyServer;
 	}
 	
 	@NotNull
@@ -112,6 +116,10 @@ public class LoginServer {
 		return updateServer.get();
 	}
 	
+	public boolean isVerifyServer() {
+		return verifyServer.get();
+	}
+	
 	public void setAddress(@NotNull String address) {
 		this.address.set(address);
 	}
@@ -132,6 +140,10 @@ public class LoginServer {
 		this.updateServer.set(server);
 	}
 	
+	public void setVerifyServer(boolean verifyServer) {
+		this.verifyServer.set(verifyServer);
+	}
+	
 	@Override
 	public String toString() {
 		return name;
@@ -143,7 +155,7 @@ public class LoginServer {
 			prev.getStatusProperty().removeListener(listenerName);
 		}
 		if (next != null) {
-			next.getStatusProperty().addListener(listenerName, this::onUpdateServerStatusUpdated);
+			next.getStatusProperty().addSimpleListener(listenerName, this::onUpdateServerStatusUpdated);
 			instanceInfo.setReadyToPlay(calculateReadyToPlay(next.getStatus()));
 		} else {
 			instanceInfo.setReadyToPlay(false);

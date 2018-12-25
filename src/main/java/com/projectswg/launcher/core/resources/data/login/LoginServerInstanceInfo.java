@@ -20,8 +20,8 @@
 
 package com.projectswg.launcher.core.resources.data.login;
 
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentBoolean;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentBoolean;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentString;
 import org.jetbrains.annotations.NotNull;
 
 public class LoginServerInstanceInfo {

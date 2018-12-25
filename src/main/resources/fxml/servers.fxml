@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <VBox fx:id="root" fx:controller="com.projectswg.launcher.core.resources.gui.ServerListController" xmlns:fx="http://javafx.com/fxml">
 	<ImageView fx:id="headerImage">
-		<Image url="/theme/projectswg/graphics/headers/server-table.png"/>
+		<Image url="/graphics/headers/server-table.png"/>
 	</ImageView>
 	<TableView fx:id="serverTable" focusTraversable="false">
 		<placeholder>

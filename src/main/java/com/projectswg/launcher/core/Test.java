@@ -18,50 +18,28 @@
  *                                                                                 *
  ***********************************************************************************/
 
-package com.projectswg.launcher.core.services.launcher;
+package com.projectswg.launcher.core;
 
-import com.projectswg.launcher.core.resources.gui.LauncherUI;
-import javafx.application.Application;
-import javafx.application.Platform;
-import me.joshlarson.jlcommon.concurrency.ThreadPool;
-import me.joshlarson.jlcommon.control.Service;
+import com.projectswg.common.network.packets.swg.holo.HoloConnectionStopped.ConnectionStoppedReason;
+import com.projectswg.holocore.client.HolocoreSocket;
+import me.joshlarson.jlcommon.concurrency.Delay;
 
-public class UserInterfaceService extends Service {
+import java.net.InetAddress;
+
+public class Test {
 	
-	private final ThreadPool uiThread;
-	
-	public UserInterfaceService() {
-		this.uiThread = new ThreadPool(1, "user-interface");
-	}
-	
-	@Override
-	public boolean initialize() {
-		uiThread.start();
-		uiThread.execute(this::run);
-		return true;
-	}
-	
-	@Override
-	public boolean isOperational() {
-		LauncherUI ui = LauncherUI.getInstance();
-		return ui == null || ui.isOperational();
-	}
-	
-	@Override
-	public boolean stop() {
-		uiThread.stop(true);
-		Platform.exit();
-		return true;
-	}
-	
-	@Override
-	public boolean terminate() {
-		uiThread.awaitTermination(5000);
-		return true;
-	}
-	
-	private void run() {
-		Application.launch(LauncherUI.class);
+	public static void main(String [] args) {
+		HolocoreSocket socket = new HolocoreSocket(InetAddress.getLoopbackAddress(), 44463);
+		socket.setStatusChangedCallback(((oldStatus, newStatus, reason) -> System.out.println(oldStatus + " -> " + newStatus + " || " + reason)));
+		socket.connect(10000);
+		System.out.println("Connected");
+		Delay.sleepMilli(10000);
+		System.out.println("Disconnecting...");
+		socket.disconnect(ConnectionStoppedReason.APPLICATION);
+		Delay.sleepMilli(2000);
+		System.out.println("Closing...");
+		socket.close();
 	}
 	
 }
+

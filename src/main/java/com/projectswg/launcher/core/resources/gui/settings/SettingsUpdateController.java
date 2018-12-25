@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui.settings;
 
-import com.projectswg.common.javafx.FXMLController;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import com.projectswg.launcher.core.resources.game.ProcessExecutor;
@@ -80,7 +80,7 @@ public class SettingsUpdateController implements FXMLController {
 		localPathSelectionButton.setOnAction(this::processLocalPathSelectionButtonAction);
 		
 		nameComboBox.valueProperty().addListener((obs, prev, next) -> { server.set(next); updateFields(next); });
-		nameComboBox.setItems(FXCollections.observableArrayList(LauncherData.getInstance().getUpdate().getServers()));
+		nameComboBox.setItems(FXCollections.observableArrayList(LauncherData.INSTANCE.getUpdate().getServers()));
 		
 		UpdateServer def = nameComboBox.getItems().get(0);
 		updateFields(def);
@@ -150,7 +150,7 @@ public class SettingsUpdateController implements FXMLController {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		directoryChooser.setTitle(title);
 		directoryChooser.setInitialDirectory(currentDirectory);
-		File file = directoryChooser.showDialog(LauncherData.getInstance().getStage());
+		File file = directoryChooser.showDialog(LauncherData.INSTANCE.getStage());
 		if (file == null || !file.isDirectory())
 			return null;
 		return file;

@@ -42,19 +42,17 @@ import java.util.prefs.Preferences;
 
 public class PreferencesDataService extends Service {
 	
-	private final LauncherData data;
 	private final Preferences preferences;
 	private final ScheduledThreadPool executor;
 	
 	public PreferencesDataService() {
-		this.data = LauncherData.getInstance();
-		this.preferences = data.getPreferences();
+		this.preferences = LauncherData.INSTANCE.getPreferences();
 		this.executor = new ScheduledThreadPool(1, 3, "data-executor-%d");
+		loadPreferences();
 	}
 	
 	@Override
-	public boolean initialize() {
-		loadPreferences();
+	public boolean start() {
 		createDefaults();
 		executor.start();
 		executor.executeWithFixedDelay(5*60000, 5*60000, this::savePreferences);
@@ -62,53 +60,52 @@ public class PreferencesDataService extends Service {
 	}
 	
 	@Override
-	public boolean terminate() {
-		executor.stop();
-		executor.awaitTermination(1000);
+	public boolean stop() {
 		savePreferences();
-		return true;
+		executor.stop();
+		return executor.awaitTermination(1000);
 	}
 	
 	private void createDefaults() {
 		createPSWG();
 		createTeamSWG();
 
-		if (data.getGeneral().getWine() == null || data.getGeneral().getWine().isEmpty())
-			data.getGeneral().setWine(getWinePath());
+		if (LauncherData.INSTANCE.getGeneral().getWine() == null || LauncherData.INSTANCE.getGeneral().getWine().isEmpty())
+			LauncherData.INSTANCE.getGeneral().setWine(getWinePath());
 	}
 	
 	private void createPSWG() {
-		UpdateServer pswgUpdateServer = data.getUpdate().getServers().stream().filter(s -> s.getName().equals("ProjectSWG")).findFirst().orElse(null);
+		UpdateServer pswgUpdateServer = LauncherData.INSTANCE.getUpdate().getServers().stream().filter(s -> s.getName().equals("ProjectSWG")).findFirst().orElse(null);
 		if (pswgUpdateServer == null) {
 			pswgUpdateServer = new UpdateServer("ProjectSWG");
 			pswgUpdateServer.setAddress("login1.projectswg.com");
 			pswgUpdateServer.setPort(80);
 			pswgUpdateServer.setBasePath("/launcher/patch");
 			pswgUpdateServer.setGameVersion("NGE");
-			data.getUpdate().addServer(pswgUpdateServer);
+			LauncherData.INSTANCE.getUpdate().addServer(pswgUpdateServer);
 		} else if (pswgUpdateServer.getGameVersion().isEmpty()) {
 			// Migrate existing persisted update servers
 			pswgUpdateServer.setGameVersion("NGE");
 		}
-		if (data.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("ProjectSWG"))) {
+		if (LauncherData.INSTANCE.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("ProjectSWG"))) {
 			LoginServer defaultLive = new LoginServer("ProjectSWG");
 			defaultLive.setAddress("login1.projectswg.com");
 			defaultLive.setPort(44453);
 			defaultLive.setUpdateServer(pswgUpdateServer);
-			data.getLogin().addServer(defaultLive);
+			LauncherData.INSTANCE.getLogin().addServer(defaultLive);
 		}
 		
-		if (data.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("localhost"))) {
+		if (LauncherData.INSTANCE.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("localhost"))) {
 			LoginServer defaultLocalhost = new LoginServer("localhost");
 			defaultLocalhost.setAddress("localhost");
 			defaultLocalhost.setPort(44463);
 			defaultLocalhost.setUpdateServer(pswgUpdateServer);
-			data.getLogin().addServer(defaultLocalhost);
+			LauncherData.INSTANCE.getLogin().addServer(defaultLocalhost);
 		}
 	}
 	
 	private void createTeamSWG() {
-		UpdateServer teamswgUpdateServer = data.getUpdate().getServers().stream().filter(s -> s.getName().equals("TeamSWG")).findFirst().orElse(null);
+		UpdateServer teamswgUpdateServer = LauncherData.INSTANCE.getUpdate().getServers().stream().filter(s -> s.getName().equals("TeamSWG")).findFirst().orElse(null);
 		
 		if (teamswgUpdateServer == null) {
 			teamswgUpdateServer = new UpdateServer("TeamSWG");
@@ -116,35 +113,35 @@ public class PreferencesDataService extends Service {
 			teamswgUpdateServer.setPort(80);
 			teamswgUpdateServer.setBasePath("/launcher/patch");
 			teamswgUpdateServer.setGameVersion("CU");
-			data.getUpdate().addServer(teamswgUpdateServer);
+			LauncherData.INSTANCE.getUpdate().addServer(teamswgUpdateServer);
 		}
 		
-		if (data.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("Constrictor"))) {
+		if (LauncherData.INSTANCE.getLogin().getServers().stream().noneMatch(s -> s.getName().equals("Constrictor"))) {
 			LoginServer constrictor = new LoginServer("Constrictor");
 			constrictor.setAddress("game.teamswg.com");
 			constrictor.setPort(44463);
 			constrictor.setUpdateServer(teamswgUpdateServer);
-			data.getLogin().addServer(constrictor);
+			LauncherData.INSTANCE.getLogin().addServer(constrictor);
 		}
 	}
 	
-	private void loadPreferences() {
+	private synchronized void loadPreferences() {
 		try {
-			loadGeneralPreferences(data.getGeneral());
-			loadUpdatePreferences(data.getUpdate());
-			loadLoginPreferences(data.getLogin());
-			loadForwarderPreferences(data.getForwarderData());
+			loadGeneralPreferences(LauncherData.INSTANCE.getGeneral());
+			loadUpdatePreferences(LauncherData.INSTANCE.getUpdate());
+			loadLoginPreferences(LauncherData.INSTANCE.getLogin());
+			loadForwarderPreferences(LauncherData.INSTANCE.getForwarderData());
 		} catch (BackingStoreException e) {
 			Log.w(e);
 		}
 	}
 	
-	private void savePreferences() {
+	private synchronized void savePreferences() {
 		try {
-			saveGeneralPreferences(data.getGeneral());
-			saveUpdatePreferences(data.getUpdate());
-			saveLoginPreferences(data.getLogin());
-			saveForwarderPreferences(data.getForwarderData());
+			saveGeneralPreferences(LauncherData.INSTANCE.getGeneral());
+			saveUpdatePreferences(LauncherData.INSTANCE.getUpdate());
+			saveLoginPreferences(LauncherData.INSTANCE.getLogin());
+			saveForwarderPreferences(LauncherData.INSTANCE.getForwarderData());
 			preferences.flush();
 		} catch (BackingStoreException e) {
 			Log.w(e);
@@ -157,6 +154,7 @@ public class PreferencesDataService extends Service {
 		ifPresent(generalPreferences, "theme", LauncherTheme::forThemeTag, generalData::setTheme);
 		ifPresent(generalPreferences, "locale", Locale::forLanguageTag, generalData::setLocale);
 		ifPresent(generalPreferences, "wine", generalData::setWine);
+		ifPresent(generalPreferences, "admin", Boolean::valueOf, generalData::setAdmin);
 	}
 	
 	private void saveGeneralPreferences(GeneralData generalData) {
@@ -164,6 +162,7 @@ public class PreferencesDataService extends Service {
 		generalPreferences.putBoolean("sound", generalData.isSound());
 		generalPreferences.put("theme", generalData.getTheme().getTag());
 		generalPreferences.put("locale", generalData.getLocale().toLanguageTag());
+		generalPreferences.putBoolean("admin", generalData.isAdmin());
 		String wine = generalData.getWine();
 		if (wine != null)
 			generalPreferences.put("wine", wine);
@@ -178,7 +177,8 @@ public class PreferencesDataService extends Service {
 			ifPresent(loginServerPreferences, "port", Integer::parseInt, server::setPort);
 			ifPresent(loginServerPreferences, "username", server::setUsername);
 			ifPresent(loginServerPreferences, "password", server::setPassword);
-			ifPresent(loginServerPreferences, "updateServer", name -> server.setUpdateServer(data.getUpdate().getServers().stream().filter(s -> s.getName().equals(name)).findFirst().orElse(null)));
+			ifPresent(loginServerPreferences, "updateServer", name -> server.setUpdateServer(LauncherData.INSTANCE.getUpdate().getServers().stream().filter(s -> s.getName().equals(name)).findFirst().orElse(null)));
+			ifPresent(loginServerPreferences, "verifyServer", Boolean::parseBoolean, server::setVerifyServer);
 			loginData.getServers().add(server);
 		}
 	}
@@ -192,6 +192,7 @@ public class PreferencesDataService extends Service {
 			loginServerPreferences.putInt("port", server.getPort());
 			loginServerPreferences.put("username", server.getUsername());
 			loginServerPreferences.put("password", server.getPassword());
+			loginServerPreferences.putBoolean("verifyServer", server.isVerifyServer());
 			UpdateServer updateServer = server.getUpdateServer();
 			if (updateServer != null)
 				loginServerPreferences.put("updateServer", updateServer.getName());

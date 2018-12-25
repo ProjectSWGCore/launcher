@@ -61,10 +61,11 @@ public class GameInstance {
 			return;
 		ForwarderData data = forwarder.getData();
 		data.setAddress(new InetSocketAddress(server.getAddress(), server.getPort()));
+		data.setVerifyServer(server.isVerifyServer());
 		data.setUsername(server.getUsername());
 		data.setPassword(server.getPassword());
-		data.setOutboundTunerInterval(LauncherData.getInstance().getForwarderData().getSendInterval());
-		data.setOutboundTunerMaxSend(LauncherData.getInstance().getForwarderData().getSendMax());
+		data.setOutboundTunerInterval(LauncherData.INSTANCE.getForwarderData().getSendInterval());
+		data.setOutboundTunerMaxSend(LauncherData.INSTANCE.getForwarderData().getSendMax());
 		forwarderThread.start();
 	}
 	
@@ -167,7 +168,17 @@ public class GameInstance {
 				"autoConnectToLoginServer=" + !username.isEmpty(),
 				"logReportFatals=true",
 				"logStderr=true",
-				"0fd345d9=true");
+				"0fd345d9=" + (LauncherData.INSTANCE.getGeneral().isAdmin() ? "true" : "false"),
+				"-s",
+				"SharedNetwork",
+				"useTcp=false",
+				"networkHandlerDispatchThrottle=false",
+				"maxRawPacketSize=16384",
+				"fragmentSize=16384",
+				"maxInstandingPackets=4096",
+				"useNetworkThread=false",
+				"processOnSend=true",
+				"networkHandlerDispatchQueueSize=2000");
 	}
 	
 	private static void reportWarning(String title, String message) {

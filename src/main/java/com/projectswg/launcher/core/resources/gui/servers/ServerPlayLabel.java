@@ -25,7 +25,7 @@ import com.projectswg.launcher.core.resources.data.update.UpdateServer.RequiredF
 import com.projectswg.launcher.core.resources.data.update.UpdateServer.UpdateServerStatus;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentDouble;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentDouble;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -59,7 +59,7 @@ public class ServerPlayLabel extends Label {
 	private void setup(UpdateServer server) {
 		if (server == null)
 			return;
-		server.getStatusProperty().addListener(this, status -> update(server, status));
+		server.getStatusProperty().addSimpleListener(this, status -> update(server, status));
 	}
 	
 	private void teardown(UpdateServer server) {
@@ -74,18 +74,18 @@ public class ServerPlayLabel extends Label {
 			case UNKNOWN:
 			case READY:
 			case SCANNING:
-				progressBar.setValue(-1);
+				progressBar.set(-1);
 				internalSetText(bundle.getString("servers.action_info.empty"));
 				setManaged(false);
 				break;
 			case REQUIRES_DOWNLOAD:
 				setManaged(true);
-				progressBar.setValue(-1);
+				progressBar.set(-1);
 				internalSetText(calculateDownloadSize(server.getRequiredFiles()) + " " + bundle.getString("servers.action_info.required"));
 				break;
 			case DOWNLOADING:
 				setManaged(true);
-				progressBar.addListener("server-play-label", p -> internalSetText(String.format("%.2f%% %s", p*100, bundle.getString("servers.action_info.progress"))));
+				progressBar.addSimpleListener("server-play-label", p -> internalSetText(String.format("%.2f%% %s", p*100, bundle.getString("servers.action_info.progress"))));
 				if (progressBar.get() == -1)
 					internalSetText(bundle.getString("servers.action_info.downloading"));
 				else

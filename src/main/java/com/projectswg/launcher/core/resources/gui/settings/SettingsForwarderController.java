@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui.settings;
 
-import com.projectswg.common.javafx.FXMLController;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.forwarder.ForwarderData;
 import javafx.beans.value.ObservableValue;
@@ -52,8 +52,8 @@ public class SettingsForwarderController implements FXMLController {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		sendIntervalTextField.setText(Integer.toString(LauncherData.getInstance().getForwarderData().getSendInterval()));
-		sendMaxTextField.setText(Integer.toString(LauncherData.getInstance().getForwarderData().getSendMax()));
+		sendIntervalTextField.setText(Integer.toString(LauncherData.INSTANCE.getForwarderData().getSendInterval()));
+		sendMaxTextField.setText(Integer.toString(LauncherData.INSTANCE.getForwarderData().getSendMax()));
 		sendIntervalTextField.textProperty().addListener(this::handleInterval);
 		sendMaxTextField.textProperty().addListener(this::handleMax);
 		
@@ -69,7 +69,7 @@ public class SettingsForwarderController implements FXMLController {
 			sendIntervalTextField.setText(filtered);
 			next = filtered;
 		}
-		LauncherData.getInstance().getForwarderData().setSendInterval(Integer.parseInt(next));
+		LauncherData.INSTANCE.getForwarderData().setSendInterval(Integer.parseInt(next));
 	}
 	
 	private void handleMax(@SuppressWarnings("unused") ObservableValue<? extends String> prop, @SuppressWarnings("unused") String prev, String next) {
@@ -78,7 +78,7 @@ public class SettingsForwarderController implements FXMLController {
 			sendMaxTextField.setText(filtered);
 			next = filtered;
 		}
-		LauncherData.getInstance().getForwarderData().setSendMax(Integer.parseInt(next));
+		LauncherData.INSTANCE.getForwarderData().setSendMax(Integer.parseInt(next));
 	}
 	
 }

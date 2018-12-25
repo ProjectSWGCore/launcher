@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.services.data;
 
-import com.projectswg.connection.HolocoreSocket;
+import com.projectswg.holocore.client.HolocoreSocket;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.login.LoginData;
 import com.projectswg.launcher.core.resources.data.login.LoginServer;
@@ -54,6 +54,12 @@ public class RemoteDataService extends Service {
 	}
 	
 	@Override
+	public boolean initialize() {
+		loginServers.synchronize(getLoginData().getServers());
+		return true;
+	}
+	
+	@Override
 	public boolean start() {
 		executor.start();
 		// Updates the status of the login server (OFFLINE/LOADING/UP/LOCKED)
@@ -66,8 +72,7 @@ public class RemoteDataService extends Service {
 	@Override
 	public boolean stop() {
 		executor.stop();
-		executor.awaitTermination(1000);
-		return true;
+		return executor.awaitTermination(1000);
 	}
 	
 	@Override
@@ -91,11 +96,11 @@ public class RemoteDataService extends Service {
 	}
 	
 	private static LoginData getLoginData() {
-		return LauncherData.getInstance().getLogin();
+		return LauncherData.INSTANCE.getLogin();
 	}
 	
 	private static UpdateData getUpdateData() {
-		return LauncherData.getInstance().getUpdate();
+		return LauncherData.INSTANCE.getUpdate();
 	}
 	
 	private static class LoginServerUpdater {
@@ -107,15 +112,15 @@ public class RemoteDataService extends Service {
 			this.server = server;
 			this.socket = null;
 			
-			server.getAddressProperty().addListener(LISTENER_KEY, addr -> updateSocket());
-			server.getPortProperty().addListener(LISTENER_KEY, port -> updateSocket());
+			server.getAddressProperty().addSimpleListener(LISTENER_KEY, addr -> updateSocket());
+			server.getPortProperty().addSimpleListener(LISTENER_KEY, port -> updateSocket());
 			updateSocket();
 		}
 		
 		public void terminate() {
 			HolocoreSocket socket = this.socket;
 			if (socket != null)
-				socket.terminate();
+				socket.close();
 		}
 		
 		public void update() {

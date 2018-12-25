@@ -20,10 +20,10 @@
 
 package com.projectswg.launcher.core.resources.data.update;
 
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentInteger;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentList;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentReference;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentInteger;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentList;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentReference;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentString;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

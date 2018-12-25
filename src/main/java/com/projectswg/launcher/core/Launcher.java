@@ -20,14 +20,16 @@
 
 package com.projectswg.launcher.core;
 
-import com.projectswg.common.javafx.ResourceUtilities;
+import com.projectswg.common.data.CrcDatabase;
 import com.projectswg.common.utilities.LocalUtilities;
+import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.services.data.DataManager;
 import com.projectswg.launcher.core.services.launcher.LauncherManager;
 import me.joshlarson.jlcommon.control.IntentManager;
 import me.joshlarson.jlcommon.control.Manager;
 import me.joshlarson.jlcommon.control.SafeMain;
 import me.joshlarson.jlcommon.control.ServiceBase;
+import me.joshlarson.jlcommon.javafx.control.FXMLManager;
 import me.joshlarson.jlcommon.log.Log;
 import me.joshlarson.jlcommon.log.log_wrapper.ConsoleLogWrapper;
 import me.joshlarson.jlcommon.log.log_wrapper.FileLogWrapper;
@@ -40,37 +42,44 @@ import java.util.List;
 
 public class Launcher {
 	
-	private final List<ServiceBase> services;
-	
-	private Launcher() {
-		this.services = new ArrayList<>();
+	public static void main(String [] args) {
+		LocalUtilities.setApplicationName(".projectswg/launcher");
+		Log.addWrapper(new ConsoleLogWrapper());
+		Log.addWrapper(new FileLogWrapper(new File(LocalUtilities.getApplicationDirectory(), "log.txt")));
+		
+		SafeMain.main("launcher", Launcher::run);
+		// No code can run after this point - SafeMain calls System.exit
 	}
 	
-	private void run() {
+	private static void run() {
+		List<ServiceBase> services = new ArrayList<>(List.of(
+				new DataManager(),
+				new LauncherManager(),
+				FXMLManager.builder()
+						.withResourceBundlePath("strings.strings")
+						.withKlass(Launcher.class)
+						.withLocale(LauncherData.INSTANCE.getGeneral().getLocale())
+						.addFxml(Launcher.class.getResource("/fxml/navigation.fxml"))
+						.build()
+		));
+		
 		try (IntentManager intentManager = new IntentManager(Runtime.getRuntime().availableProcessors())) {
 			IntentManager.setInstance(intentManager);
-			services.clear();
-			services.add(new DataManager());
-			services.add(new LauncherManager());
+			
 			for (ServiceBase s : services)
 				s.setIntentManager(intentManager);
+			
 			Manager.start(services);
 			Manager.run(services, 100);
 			Collections.reverse(services); // Allows the data services to stay alive longer
 			Manager.stop(services);
+			
+			for (ServiceBase s : services)
+				s.setIntentManager(null);
+			
 			IntentManager.setInstance(null);
 			ThreadUtilities.printActiveThreads();
 		}
-	}
-	
-	public static void main(String [] args) {
-		LocalUtilities.setApplicationName(".projectswg/launcher");
-		ResourceUtilities.setPrimarySource(Launcher.class);
-		Log.addWrapper(new ConsoleLogWrapper());
-		Log.addWrapper(new FileLogWrapper(new File(LocalUtilities.getApplicationDirectory(), "log.txt")));
-		
-		SafeMain.main("launcher", new Launcher()::run);
-		// No code can run after this point - SafeMain calls System.exit
 	}
 	
 }

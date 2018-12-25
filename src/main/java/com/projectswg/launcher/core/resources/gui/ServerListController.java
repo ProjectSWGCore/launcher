@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.gui;
 
-import com.projectswg.common.javafx.FXMLController;
+import me.joshlarson.jlcommon.javafx.control.FXMLController;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.login.LoginServer;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
@@ -32,8 +32,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentBase;
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentString;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentBase;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentString;
 
 import java.net.URL;
 import java.util.Comparator;
@@ -76,20 +76,20 @@ public class ServerListController implements FXMLController {
 		addCenterAlignColumn(resources.getString("servers.column.localStatus"), COL_WIDTH_LARGE, resources::getString, s -> s.getInstanceInfo().getUpdateStatusProperty());
 		addPlayColumn(resources);
 		
-		LauncherData.getInstance().getLogin().getServers().addCollectionChangedListener(LISTENER_KEY, this::updateServerTable);
-		LauncherData.getInstance().getAnnouncements().getServerListCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
+		LauncherData.INSTANCE.getLogin().getServers().addCollectionChangedListener(LISTENER_KEY, this::updateServerTable);
+		LauncherData.INSTANCE.getAnnouncements().getServerListCards().addCollectionChangedListener(LISTENER_KEY, this::updateAnnouncements);
 		updateServerTable();
 		updateAnnouncements();
 	}
 	
 	private void updateServerTable() {
-		serverTable.getItems().setAll(LauncherData.getInstance().getLogin().getServers());
+		serverTable.getItems().setAll(LauncherData.INSTANCE.getLogin().getServers());
 		serverTable.getItems().sort(Comparator.comparing(LoginServer::getName));
 	}
 	
 	private void updateAnnouncements() {
 		cardContainer.clearCards();
-		LauncherData.getInstance().getAnnouncements().getServerListCards().forEach(cardContainer::addCard);
+		LauncherData.INSTANCE.getAnnouncements().getServerListCards().forEach(cardContainer::addCard);
 	}
 	
 	private <S, T> void addCenterAlignColumn(String name, double prefWidth, Function<S, T> conv, Function<LoginServer, ConcurrentBase<S>> transform) {
@@ -102,7 +102,7 @@ public class ServerListController implements FXMLController {
 		col.setPrefWidth(prefWidth);
 		col.setCellValueFactory(param -> {
 			ConcurrentBase<S> val = transform.apply(param.getValue());
-			SimpleObjectProperty<T> obj = new SimpleObjectProperty<>(conv.apply(val.get()));
+			SimpleObjectProperty<T> obj = new SimpleObjectProperty<>(conv.apply(val.getValue()));
 			val.addTransformListener(LISTENER_KEY, conv, obj::set);
 			return obj;
 		});

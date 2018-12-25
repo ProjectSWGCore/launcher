@@ -20,7 +20,7 @@
 
 package com.projectswg.launcher.core.resources.data.update;
 
-import me.joshlarson.jlcommon.concurrency.beans.ConcurrentSet;
+import me.joshlarson.jlcommon.javafx.beans.ConcurrentSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CopyOnWriteArraySet;
