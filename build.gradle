@@ -5,7 +5,7 @@ plugins {
 	id 'application'
 	id 'java'
 	id 'idea'
-	id "edu.sc.seis.macAppBundle" version "2.2.1"
+	id "edu.sc.seis.macAppBundle" version "2.3.0"
 	id "com.github.johnrengelman.shadow" version "4.0.3"
 	id "org.openjfx.javafxplugin" version "0.0.5"
 	id "org.beryx.jlink" version "2.2.1"
@@ -38,6 +38,18 @@ jlink {
 	targetPlatforms.orNull.put('windows', new TargetPlatform('windows', javaHomeWindows))
 }
 
+/**
+ * Copies the JLink created JRE into a subdirectory in build/ that contains a /Contents/Home/jre directory.
+ * This has to happen because the Mac App Bundle plugin relies on that structure unfortunately.
+ */
+def macJreLocation = projectDir.toString() + "/build/mock-mac-jre/Contents/Home"
+task createMacJREStructure(type: Copy) {
+	dependsOn(tasks.jlink)
+	from "build/image/launcher-mac"
+	include "**/*"
+	into macJreLocation + "/jre"
+}
+
 shadowJar {
 	baseName = "Launcher"
 	classifier = null
@@ -47,13 +59,14 @@ shadowJar {
 macAppBundle {
 	appName "ProjectSWG"
 	dmgName "ProjectSWG"
-	icon "src/main/resources/theme/projectswg/graphics/ProjectSWGLaunchpad.icns"
+	icon "src/main/resources/graphics/ProjectSWGLaunchpad.icns"
 	mainClassName "${->project.mainClassName}"
-	jarTask 'shadowJar'
 	jvmVersion javaVersion
-	jreHome javaHomeMac
+	jreHome macJreLocation
 	bundleJRE true
 }
+// Enforce that the JRE is copied with a Mac based structure
+bundleJRE.dependsOn createMacJREStructure
 
 javafx {
 	modules = ['javafx.controls', 'javafx.fxml']
@@ -86,4 +99,3 @@ task CreateUpdateListTask(type: ShadowJar) {
 	configurations = [project.configurations.utilityRuntime]
 	exclude('META-INF/INDEX.LIST', 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA')
 }
-
