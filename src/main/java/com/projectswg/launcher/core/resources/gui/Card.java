@@ -78,6 +78,10 @@ public class Card extends VBox {
 		}
 	}
 	
+	public String getTitle() {
+		return title.getText();
+	}
+	
 	public void setTitle(String title) {
 		this.title.setText(title);
 	}

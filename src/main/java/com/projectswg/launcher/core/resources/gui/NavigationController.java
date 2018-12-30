@@ -30,6 +30,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import me.joshlarson.jlcommon.javafx.control.FXMLController;
@@ -92,6 +93,7 @@ public class NavigationController extends FXMLService implements FXMLController 
 			primaryStage.setTitle("ProjectSWG Launcher");
 			primaryStage.setScene(new Scene(root));
 			primaryStage.setResizable(false);
+			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/graphics/ProjectSWG.png")));
 			primaryStage.show();
 			LauncherData.INSTANCE.setApplication(getApplication());
 			LauncherData.INSTANCE.setStage(primaryStage);

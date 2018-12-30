@@ -35,11 +35,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
@@ -114,14 +109,8 @@ public class AnnouncementService extends Service {
 		String title = obj.getString("title");
 		String description = obj.getString("description");
 		String link = obj.getString("link");
-		if (title == null)
-			title = "";
-		else
-			title = parseVariables(title);
-		if (description == null)
-			description = "";
-		else
-			description = parseVariables(description);
+		title = title == null ? "" : parseVariables(title);
+		description = description == null ? "" : parseVariables(description);
 		
 		return new CardData(imageUrl, title, description, link);
 	}
@@ -165,15 +154,19 @@ public class AnnouncementService extends Service {
 				case "windows":
 					if (!currentOs.contains("win"))
 						return false;
+					break;
 				case "mac":
 					if (!currentOs.contains("mac"))
 						return false;
+					break;
 				case "linux":
 					if (currentOs.contains("win") || currentOs.contains("mac"))
 						return false;
+					break;
 			}
 		}
 		// Inclusive
+		
 		return passesVersionCheck(filter.getString("minLauncherVersion"), (cur, b) -> cur >= b, true) && passesVersionCheck(filter.getString("maxLauncherVersion"), (cur, b) -> cur < b, false);
 	}
 	

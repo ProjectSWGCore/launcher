@@ -1,10 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.beryx.jlink.data.TargetPlatform
 
 plugins {
 	id 'application'
 	id 'java'
 	id 'idea'
+	id "nebula.deb" version "5.2.0"
+	id "nebula.rpm" version "5.2.0"
 	id "edu.sc.seis.macAppBundle" version "2.3.0"
 	id "com.github.johnrengelman.shadow" version "4.0.3"
 	id "org.openjfx.javafxplugin" version "0.0.5"
@@ -15,10 +16,8 @@ plugins {
 // Note: define javaVersion, javaHomeLinux, javaHomeMac, and javaHomeWindows inside your gradle.properties file
 
 group = 'com.projectswg.launcher'
-version = '1.1.13'
+version = '1.2.1'
 mainClassName = "com.projectswg.launcher.core.Launcher"
-sourceCompatibility = 11
-targetCompatibility = 11
 
 sourceSets {
 	main {}
@@ -32,44 +31,20 @@ idea {
 }
 
 jlink {
-	options.addAll('--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages')
-	targetPlatforms.orNull.put('linux', new TargetPlatform('linux', javaHomeLinux))
-	targetPlatforms.orNull.put('mac', new TargetPlatform('mac', javaHomeMac))
-	targetPlatforms.orNull.put('windows', new TargetPlatform('windows', javaHomeWindows))
+	addOptions '--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages'
+	targetPlatform('linux', javaHomeLinux)
+	targetPlatform('mac', javaHomeMac)
+	targetPlatform('windows', javaHomeWindows)
 }
 
-/**
- * Copies the JLink created JRE into a subdirectory in build/ that contains a /Contents/Home/jre directory.
- * This has to happen because the Mac App Bundle plugin relies on that structure unfortunately.
- */
-def macJreLocation = projectDir.toString() + "/build/mock-mac-jre/Contents/Home"
-task createMacJREStructure(type: Copy) {
-	dependsOn(tasks.jlink)
-	from "build/image/launcher-mac"
-	include "**/*"
-	into macJreLocation + "/jre"
+javafx {
+	modules = ['javafx.controls', 'javafx.fxml']
 }
 
 shadowJar {
 	baseName = "Launcher"
 	classifier = null
 	version = null
-}
-
-macAppBundle {
-	appName "ProjectSWG"
-	dmgName "ProjectSWG"
-	icon "src/main/resources/graphics/ProjectSWGLaunchpad.icns"
-	mainClassName "${->project.mainClassName}"
-	jvmVersion javaVersion
-	jreHome macJreLocation
-	bundleJRE true
-}
-// Enforce that the JRE is copied with a Mac based structure
-bundleJRE.dependsOn createMacJREStructure
-
-javafx {
-	modules = ['javafx.controls', 'javafx.fxml']
 }
 
 repositories {
@@ -90,6 +65,74 @@ dependencies {
 	utilityCompile 'net.openhft:zero-allocation-hashing:0.8'
 	
     testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+/**
+ * Copies the JLink created JRE into a subdirectory in build/ that contains a /Contents/Home/jre directory.
+ * This has to happen because the Mac App Bundle plugin relies on that structure unfortunately.
+ */
+def macJreLocation = projectDir.toString() + "/build/mock-mac-jre/Contents/Home"
+task createMacJREStructure(type: Copy) {
+	dependsOn(tasks.jlink)
+	from "build/image/launcher-mac"
+	include "**/*"
+	into macJreLocation + "/jre"
+}
+
+macAppBundle {
+	appName "ProjectSWG"
+	dmgName "ProjectSWG"
+	icon "src/main/resources/graphics/ProjectSWGLaunchpad.icns"
+	mainClassName "${->project.mainClassName}"
+	jvmVersion javaVersion
+	jreHome macJreLocation
+	bundleJRE true
+}
+// Enforce that the JRE is copied with a Mac based structure
+bundleJRE.dependsOn createMacJREStructure
+
+task linuxDeb(type: Deb) {
+	dependsOn 'jlink'
+	release '1'
+	packageName 'projectswg'
+	maintainer 'ProjectSWG'
+	
+	preInstall file('packaging/linux/preInstall.sh')
+	postInstall file('packaging/linux/postInstall.sh')
+	preUninstall file('packaging/linux/preUninstall.sh')
+	postUninstall file('packaging/linux/postUninstall.sh')
+	
+	from ('build/image/launcher-linux') {
+		into '/opt/ProjectSWG'
+	}
+	from ('packaging/linux') {
+		exclude '*.sh'
+		into '/opt/ProjectSWG'
+	}
+	
+	link('/usr/share/applications/ProjectSWG.desktop', '/opt/ProjectSWG/ProjectSWG.desktop')
+}
+
+task linuxRpm(type: Rpm) {
+	dependsOn 'jlink'
+	release '1'
+	packageName 'projectswg'
+	maintainer 'ProjectSWG'
+	
+	preInstall file('packaging/linux/preInstall.sh')
+	postInstall file('packaging/linux/postInstall.sh')
+	preUninstall file('packaging/linux/preUninstall.sh')
+	postUninstall file('packaging/linux/postUninstall.sh')
+	
+	from ('build/image/launcher-linux') {
+		into '/opt/ProjectSWG'
+	}
+	from ('packaging/linux') {
+		exclude '*.sh'
+		into '/opt/ProjectSWG'
+	}
+	
+	link('/usr/share/applications/ProjectSWG.desktop', '/opt/ProjectSWG/ProjectSWG.desktop')
 }
 
 task CreateUpdateListTask(type: ShadowJar) {

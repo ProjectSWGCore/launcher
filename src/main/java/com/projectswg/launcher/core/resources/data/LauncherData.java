@@ -35,7 +35,7 @@ import java.util.prefs.Preferences;
 public enum LauncherData {
 	INSTANCE;
 	
-	public static final String VERSION = "1.1.13";
+	public static final String VERSION = "1.2.1";
 	public static final String UPDATE_ADDRESS = "login1.projectswg.com";
 	
 	private final AtomicReference<Application> application;

@@ -23,6 +23,7 @@ package com.projectswg.launcher.core.resources.gui;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.layout.FlowPane;
+import me.joshlarson.jlcommon.log.Log;
 
 public class CardContainer extends FlowPane {
 	
@@ -35,18 +36,15 @@ public class CardContainer extends FlowPane {
 	}
 	
 	public void addCard(Card card) {
-		widthProperty().addListener((obs, prev, next) -> card.setPrefWidth(createCardSize(next.doubleValue())));
-		heightProperty().addListener((obs, prev, next) -> card.setPrefHeight(createCardSize(next.doubleValue())));
 		card.setPrefWidth(createCardSize(getWidth()));
 		card.setPrefHeight(createCardSize(getHeight()));
+		Log.t("Adding card '%s' with size %fx%f", card.getTitle(), card.getPrefWidth(), card.getPrefHeight());
 		getChildren().add(card);
 		Platform.runLater(this::applyCss);	// Ensures CSS is applied for contained elements
 	}
 	
 	private static double createCardSize(double max) {
-		int count = (int) (max / 300);
-		if (count <= 0)
-			count = 1;
+		int count = Math.max(1, (int) (max / 300));
 		return (int) ((max - (count-1)*10) / count - 0.5);
 	}
 	
