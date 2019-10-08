@@ -61,8 +61,10 @@ public enum ProcessExecutor {
 		pb.redirectErrorStream(true);
 		pb.directory(swg.getParentFile());
 		pb.environment().put("WINEDEBUG", "-all");
+		pb.environment().put("mesa_glthread", "true");
+		pb.environment().put("__GL_THREADED_OPTIMIZATIONS", "1");
 		try {
-			Log.i("Starting executable %s", Thread.currentThread().getName());
+			Log.i("Starting executable %s in directory %s", Thread.currentThread().getName(), swg.getParentFile());
 			return pb.start();
 		} catch (IOException e) {
 			Log.e("Failed to launch. %s: %s", e.getClass().getName(), e.getMessage());

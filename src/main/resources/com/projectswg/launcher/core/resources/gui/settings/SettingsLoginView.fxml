@@ -1,0 +1,41 @@
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+	<Label text="%settings.login.header" styleClass="settings-header-label" />
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.name" />
+		<ComboBox fx:id="nameComboBox" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.address" />
+		<TextField fx:id="addressTextField" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.port" />
+		<TextField fx:id="portTextField" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.username" />
+		<TextField fx:id="usernameTextField" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.password" />
+		<PasswordField fx:id="passwordField" />
+		<Region prefWidth="10" />
+		<ToggleButton fx:id="hidePasswordButton" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.updateServer" />
+		<ComboBox fx:id="updateServerComboBox" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.verify_server" />
+		<CheckBox fx:id="verifyServerCheckBox" />
+		<Region prefWidth="10" />
+		<Label text="%settings.login.verify_server_disclaimer" style="-fx-font-size: 10px;" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+	</HBox>
+	<HBox styleClass="settings-row">
+		<Label text="%settings.login.enable_encryption" />
+		<CheckBox fx:id="enableEncryptionCheckBox" />
+	</HBox>
+</VBox>

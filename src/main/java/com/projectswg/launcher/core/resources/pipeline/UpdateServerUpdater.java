@@ -23,6 +23,7 @@ package com.projectswg.launcher.core.resources.pipeline;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer.RequiredFile;
 import com.projectswg.launcher.core.resources.data.update.UpdateServer.UpdateServerStatus;
+import javafx.application.Platform;
 import me.joshlarson.jlcommon.log.Log;
 import me.joshlarson.json.*;
 
@@ -84,7 +85,7 @@ public class UpdateServerUpdater {
 		List<RequiredFile> files = Objects.requireNonNull(info.getFiles(), "File list was not read correctly");
 		Log.d("%d known files. Scanning...", files.size());
 		int total = files.size();
-		info.getServer().setStatus(UpdateServerStatus.SCANNING);
+		Platform.runLater(() -> info.getServer().setStatus(UpdateServerStatus.SCANNING));
 		files.removeIf(UpdateServerUpdater::isValidFile);
 		int valid = total - files.size();
 		Log.d("Completed scan of update server %s. %d of %d valid.", info.getName(), valid, total);
@@ -100,7 +101,7 @@ public class UpdateServerUpdater {
 		
 		serverList.clear();
 		serverList.addAll(updateList);
-		info.getServer().setStatus(updateStatus);
+		Platform.runLater(() -> info.getServer().setStatus(updateStatus));
 		Log.d("Setting update server '%s' status to %s", info.getName(), updateStatus);
 	}
 	

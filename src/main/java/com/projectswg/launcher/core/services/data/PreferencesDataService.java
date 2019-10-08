@@ -178,7 +178,8 @@ public class PreferencesDataService extends Service {
 			ifPresent(loginServerPreferences, "username", server::setUsername);
 			ifPresent(loginServerPreferences, "password", server::setPassword);
 			ifPresent(loginServerPreferences, "updateServer", name -> server.setUpdateServer(LauncherData.INSTANCE.getUpdate().getServers().stream().filter(s -> s.getName().equals(name)).findFirst().orElse(null)));
-			ifPresent(loginServerPreferences, "verifyServer", Boolean::parseBoolean, server::setVerifyServer);
+			ifPresent(loginServerPreferences, "isVerifyServer", Boolean::parseBoolean, server::setVerifyServer);
+			ifPresent(loginServerPreferences, "isEncryptionEnabled", Boolean::parseBoolean, server::setEncryptionEnabled);
 			loginData.getServers().add(server);
 		}
 	}
@@ -192,7 +193,8 @@ public class PreferencesDataService extends Service {
 			loginServerPreferences.putInt("port", server.getPort());
 			loginServerPreferences.put("username", server.getUsername());
 			loginServerPreferences.put("password", server.getPassword());
-			loginServerPreferences.putBoolean("verifyServer", server.isVerifyServer());
+			loginServerPreferences.putBoolean("isVerifyServer", server.isVerifyServer());
+			loginServerPreferences.putBoolean("isEncryptionEnabled", server.isEncryptionEnabled());
 			UpdateServer updateServer = server.getUpdateServer();
 			if (updateServer != null)
 				loginServerPreferences.put("updateServer", updateServer.getName());

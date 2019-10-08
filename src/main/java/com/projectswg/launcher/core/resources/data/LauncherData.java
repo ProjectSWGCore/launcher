@@ -28,18 +28,16 @@ import com.projectswg.launcher.core.resources.data.login.LoginData;
 import com.projectswg.launcher.core.resources.data.update.UpdateData;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import tornadofx.FX;
 
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.prefs.Preferences;
 
 public enum LauncherData {
 	INSTANCE;
 	
-	public static final String VERSION = "1.2.1";
+	public static final String VERSION = "1.3.2";
 	public static final String UPDATE_ADDRESS = "login1.projectswg.com";
 	
-	private final AtomicReference<Application> application;
-	private final AtomicReference<Stage> stage;
 	private final AnnouncementsData announcementsData;
 	private final GeneralData generalData;
 	private final LoginData loginData;
@@ -47,8 +45,6 @@ public enum LauncherData {
 	private final ForwarderData forwarderData;
 	
 	LauncherData() {
-		this.application = new AtomicReference<>(null);
-		this.stage = new AtomicReference<>(null);
 		this.announcementsData = new AnnouncementsData();
 		this.generalData = new GeneralData();
 		this.loginData = new LoginData();
@@ -61,11 +57,11 @@ public enum LauncherData {
 	}
 	
 	public Application getApplication() {
-		return application.get();
+		return FX.Companion.getApplication();
 	}
 	
 	public Stage getStage() {
-		return stage.get();
+		return FX.Companion.getPrimaryStage();
 	}
 	
 	public AnnouncementsData getAnnouncements() {
@@ -86,14 +82,6 @@ public enum LauncherData {
 	
 	public ForwarderData getForwarderData() {
 		return forwarderData;
-	}
-	
-	public void setApplication(Application application) {
-		this.application.set(application);
-	}
-	
-	public void setStage(Stage stage) {
-		this.stage.set(stage);
 	}
 	
 	public static LauncherData getInstance() {

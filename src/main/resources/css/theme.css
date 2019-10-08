@@ -121,37 +121,6 @@
 	-fx-background-radius: 0;
 }
 
-/* Cards */
-	
-	.card-container {
-		-fx-hgap: 10px;
-		-fx-vgap: 10px;
-	}
-	
-	.card {
-		-fx-background-color: #454545;
-		-fx-vbar-policy: as-needed;
-		-fx-hbar-policy: never;
-	}
-	
-	.card-content {
-		-fx-vgap: 5px;
-		-fx-alignment: center;
-	}
-	
-	.card .title {
-		-fx-font-weight: bold;
-		-fx-text-fill: white;
-		-fx-wrap-text: true;
-		-fx-font-size: 14px;
-		-fx-background-color: #313131;
-		-fx-padding: 5px;
-	}
-	
-	.card .description {
-		-fx-font-size: 12px;
-	}
-
 /* Tabs*/
 	
 	.tab-pane {

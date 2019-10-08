@@ -23,6 +23,7 @@ package com.projectswg.launcher.core.services.data;
 import com.projectswg.common.utilities.LocalUtilities;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.announcements.AnnouncementsData;
+import com.projectswg.launcher.core.resources.data.announcements.CardData;
 import com.projectswg.launcher.core.resources.gui.Card;
 import javafx.application.Platform;
 import me.joshlarson.jlcommon.concurrency.ScheduledThreadPool;
@@ -57,6 +58,13 @@ public class AnnouncementService extends Service {
 	
 	@Override
 	public boolean start() {
+		try (JSONInputStream jsonInputStream = new JSONInputStream(new FileInputStream(new File(LocalUtilities.getApplicationDirectory(), "announcements.json")))) {
+			JSONObject announcements = jsonInputStream.readObject();
+			update(announcements);
+		} catch (IOException | JSONException e) {
+			Log.w("Failed to load announcements from disk");
+		}
+		
 		executor.start();
 		executor.executeWithFixedDelay(3000, TimeUnit.MINUTES.toMillis(30), this::update);
 		return true;
@@ -73,28 +81,20 @@ public class AnnouncementService extends Service {
 		JSONObject announcements = updateAnnouncements();
 		if (announcements == null)
 			return;
-		
+		update(announcements);
+	}
+	
+	private void update(JSONObject announcements) {
 		List<CardData> announcementCards = parseCards(announcements.getArray("announcements")).stream().map(this::downloadImage).collect(Collectors.toList());
 		List<CardData> serverCards = parseCards(announcements.getArray("servers")).stream().map(this::downloadImage).collect(Collectors.toList());
 		
 		Platform.runLater(() -> {
 			AnnouncementsData data = LauncherData.INSTANCE.getAnnouncements();
 			data.getAnnouncementCards().clear();
-			data.getAnnouncementCards().addAll(announcementCards.stream().map(this::dataToCard).collect(Collectors.toList()));
+			data.getAnnouncementCards().addAll(announcementCards);
 			data.getServerListCards().clear();
-			data.getServerListCards().addAll(serverCards.stream().map(this::dataToCard).collect(Collectors.toList()));
+			data.getServerListCards().addAll(serverCards);
 		});
-	}
-	
-	private Card dataToCard(CardData cd) {
-		Card card = new Card();
-		if (cd.getImageUrl() != null)
-			card.setHeaderImage(new File(cd.getImageUrl()));
-		if (cd.getLink() != null)
-			card.setLink(cd.getLink());
-		card.setTitle(cd.getTitle());
-		card.setDescription(cd.getDescription());
-		return card;
 	}
 	
 	private List<CardData> parseCards(JSONArray descriptor) {
@@ -217,38 +217,6 @@ public class AnnouncementService extends Service {
 			}
 		}
 		return announcements;
-	}
-	
-	private static class CardData {
-		
-		private final String imageUrl;
-		private final String title;
-		private final String description;
-		private final String link;
-		
-		public CardData(String imageUrl, String title, String description, String link) {
-			this.imageUrl = imageUrl;
-			this.title = title;
-			this.description = description;
-			this.link = link;
-		}
-		
-		public String getImageUrl() {
-			return imageUrl;
-		}
-		
-		public String getTitle() {
-			return title;
-		}
-		
-		public String getDescription() {
-			return description;
-		}
-		
-		public String getLink() {
-			return link;
-		}
-		
 	}
 	
 }
