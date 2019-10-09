@@ -17,7 +17,7 @@ plugins {
 // Note: define javaVersion, javaHomeLinux, javaHomeMac, and javaHomeWindows inside your gradle.properties file
 
 group = 'com.projectswg.launcher'
-version = '1.3.2'
+version = '1.3.3'
 sourceCompatibility = 12
 
 application {
