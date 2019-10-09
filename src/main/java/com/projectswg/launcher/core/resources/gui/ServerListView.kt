@@ -42,7 +42,7 @@ class ServerListView : View() {
 			placeholder = label(messages["noServers"])
 			setSortPolicy { _ -> Comparator.comparing<LoginServer, String> { it.name }; true }
 			
-			column(messages["servers.column.name"], LoginServer::nameProperty) {
+			column(messages["servers.column.name"], valueProvider={cellDataFeatures:TableColumn.CellDataFeatures<LoginServer, String> -> ReadOnlyStringWrapper(cellDataFeatures.value?.name) }).apply {
 				prefWidth = COL_WIDTH_LARGE
 				styleClass += "center-table-cell"
 			}

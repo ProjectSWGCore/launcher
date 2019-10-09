@@ -79,10 +79,11 @@ class ServerPlayCell : TableCellFragment<LoginServer, LoginServer>() {
 					gameInstance.start()
 					GameLaunchedIntent(gameInstance).broadcast()
 					gameInstance
-				} ui {
-					if (LauncherData.INSTANCE.general.isAdmin) {
-						find<AdminDisplay>(AdminDisplay::forwarder to it.forwarder).openWindow()
-					}
+//				} ui {
+//					if (LauncherData.INSTANCE.general.isAdmin) {
+//						find<AdminDisplay>(AdminDisplay::forwarder to it.forwarder).openWindow()
+						// TODO: Fix admin display
+//					}
 				}
 			}
 			REQUIRES_DOWNLOAD -> DownloadPatchIntent(updateServerProperty.value ?: return).broadcast()
