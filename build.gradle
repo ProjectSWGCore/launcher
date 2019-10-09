@@ -17,7 +17,7 @@ plugins {
 // Note: define javaVersion, javaHomeLinux, javaHomeMac, and javaHomeWindows inside your gradle.properties file
 
 group = 'com.projectswg.launcher'
-version = '1.3.1'
+version = '1.3.2'
 mainClassName = "com.projectswg.launcher.core.LauncherKt"
 sourceCompatibility = 12
 
