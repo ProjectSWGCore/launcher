@@ -1,49 +1,77 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+//import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
 	application
 	java
 	idea
-	kotlin("jvm") version "1.3.50"
-	id("nebula.deb") version "6.2.1"
-	id("nebula.rpm") version "6.2.1"
+	kotlin("jvm") version "1.4.32"
+	id("nebula.deb") version "8.4.1"
+	id("nebula.rpm") version "8.4.1"
 	id("edu.sc.seis.macAppBundle") version "2.3.0"
-	id("com.github.johnrengelman.shadow") version "5.1.0"
-	id("org.openjfx.javafxplugin") version "0.0.7"
-	id("org.beryx.jlink") version "2.16.0"
-	id("org.javamodularity.moduleplugin") version "1.5.0"
+	id("org.beryx.jlink") version "2.23.6"
 }
 
 // Note: define javaVersion, javaMajorVersion, javaHomeLinux, javaHomeMac, and javaHomeWindows
 //       inside your gradle.properties file
 val javaVersion: String by project
 val javaMajorVersion: String by project
+val kotlinTargetJdk: String by project
 val javaHomeLinux: String by project
 val javaHomeMac: String by project
 val javaHomeWindows: String by project
 
+subprojects {
+	ext {
+		set("javaVersion", javaVersion)
+		set("javaMajorVersion", javaMajorVersion)
+		set("kotlinTargetJdk", kotlinTargetJdk)
+	}
+}
+
 group = "com.projectswg.launcher"
-version = "1.3.4"
+version = "1.3.5"
 
 application {
-	mainClassName = "com.projectswg.launcher/com.projectswg.launcher.core.LauncherKt"
-	applicationDefaultJvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx")
+	mainModule.set("com.projectswg.launcher")
+	mainClass.set("com.projectswg.launcher.core.LauncherKt")
+	applicationDefaultJvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx", "-Djavax.net.debug=all")
 }
 
 repositories {
-	mavenLocal()
+	mavenCentral()
 	maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots") }
-    jcenter()
+	jcenter()
 }
 
 sourceSets {
 	main {
+        java.outputDir = File(java.outputDir.toString().replace("\\${File.separatorChar}java", ""))
+		
 		dependencies {
+			val jfxOptions = object {
+				val group = "org.openjfx"
+				val version = javaVersion
+				val fxModules = arrayListOf("javafx-base", "javafx-graphics", "javafx-controls", "javafx-fxml", "javafx-swing", "javafx-web", "javafx-media")
+			}
+			jfxOptions.run {
+				val osName = System.getProperty("os.name")
+				val platform = when {
+					osName.startsWith("Mac", ignoreCase = true) -> "mac"
+					osName.startsWith("Windows", ignoreCase = true) -> "win"
+					osName.startsWith("Linux", ignoreCase = true) -> "linux"
+					else -> ""
+				}
+				fxModules.forEach {
+					implementation("$group:$it:$version:$platform")
+				}
+			}
+			
 			implementation(project(":pswgcommon"))
 			implementation(project(":client-holocore"))
 			implementation(project(":forwarder"))
-			implementation(group="net.openhft", name="zero-allocation-hashing", version="0.8")
-			implementation(group="me.joshlarson", name="fast-json", version="2.2.3")
+			implementation(project(":zero_allocation_hashing"))
+			implementation("javax.json:javax.json-api:1.1.4")
+			implementation(group="me.joshlarson", name="fast-json", version="3.0.1")
 			implementation(group="me.joshlarson", name="jlcommon-fx", version="1.0.3")
 			implementation(group="no.tornado", name="tornadofx", version="2.0.0-SNAPSHOT") {
 				exclude(group="org.jetbrains.kotlin")
@@ -61,8 +89,8 @@ sourceSets {
 	create("utility") {
 		dependencies {
 			implementation(group="org.bouncycastle", name="bcprov-jdk15on", version="1.60")
-			implementation(group="me.joshlarson", name="fast-json", version="2.2.3")
-			implementation(group="net.openhft", name="zero-allocation-hashing", version="0.8")
+			implementation(group="me.joshlarson", name="fast-json", version="3.0.1")
+			implementation(project(":zero_allocation_hashing"))
 		}
 	}
 }
@@ -74,27 +102,23 @@ idea {
     }
 }
 
+java {
+	modularity.inferModulePath.set(true)
+}
+
 jlink {
 	addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+	javaHome.set(javaHomeLinux)
 	targetPlatform("linux", javaHomeLinux)
 	targetPlatform("mac", javaHomeMac)
 	targetPlatform("windows", javaHomeWindows)
+	forceMerge("kotlin-stdlib")
 	
 	launcher {
 		name = "projectswg"
 		jvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx")
 	}
-}
-
-javafx {
-	version = javaVersion
-	modules = listOf("javafx.controls", "javafx.fxml", "javafx.swing", "javafx.web", "javafx.media")
-}
-
-tasks.named<ShadowJar>("shadowJar") {
-	archiveBaseName.set("Launcher")
-	archiveClassifier.set("")
-	archiveVersion.set("")
+	
 }
 
 /**
@@ -113,7 +137,7 @@ macAppBundle {
 	appName = "ProjectSWG"
 	dmgName = "ProjectSWG"
 	icon = "src/main/resources/graphics/ProjectSWGLaunchpad.icns"
-	mainClassName = application.mainClassName
+	mainClassName = application.mainClass.get()
 	jvmVersion = javaVersion
 	jreHome = macJreLocation
 	bundleJRE = true
@@ -167,17 +191,9 @@ tasks.create<com.netflix.gradle.plugins.rpm.Rpm>("linuxRpm") {
 	link("/usr/share/applications/ProjectSWG.desktop", "/opt/ProjectSWG/ProjectSWG.desktop")
 }
 
-tasks.create<ShadowJar>("CreateUpdateListTask") {
-	archiveFileName.set("CreateUpdateList.jar")
-	manifest.attributes["Main-Class"] = "com.projectswg.launcher.utility.CreateUpdateList"
-	from(sourceSets["utility"].output)
-	exclude("META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class).configureEach {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
 	kotlinOptions {
-		jvmTarget = javaMajorVersion
-		noReflect = false
-		noStdlib = false
+		jvmTarget = kotlinTargetJdk
 	}
+	destinationDir = sourceSets.main.get().java.outputDir
 }

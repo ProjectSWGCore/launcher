@@ -57,7 +57,7 @@ public class UpdateServerUpdater {
 	private static boolean updateFileList(UpdateServerDownloaderInfo info) {
 		Log.t("Retrieving latest file list from %s...", info.getAddress());
 		File localFileList = new File(info.getLocalPath(), "files.json");
-		JSONArray files;
+		List<Object> files;
 		try (JSONInputStream in = new JSONInputStream(createURL(info, "files.json").openConnection().getInputStream())) {
 			files = in.readArray();
 			try (JSONOutputStream out = new JSONOutputStream(new FileOutputStream(localFileList))) {

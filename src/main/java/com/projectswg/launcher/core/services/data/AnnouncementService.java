@@ -24,7 +24,6 @@ import com.projectswg.common.utilities.LocalUtilities;
 import com.projectswg.launcher.core.resources.data.LauncherData;
 import com.projectswg.launcher.core.resources.data.announcements.AnnouncementsData;
 import com.projectswg.launcher.core.resources.data.announcements.CardData;
-import com.projectswg.launcher.core.resources.gui.Card;
 import javafx.application.Platform;
 import me.joshlarson.jlcommon.concurrency.ScheduledThreadPool;
 import me.joshlarson.jlcommon.control.Service;
@@ -59,7 +58,7 @@ public class AnnouncementService extends Service {
 	@Override
 	public boolean start() {
 		try (JSONInputStream jsonInputStream = new JSONInputStream(new FileInputStream(new File(LocalUtilities.getApplicationDirectory(), "announcements.json")))) {
-			JSONObject announcements = jsonInputStream.readObject();
+			Map<String, Object> announcements = jsonInputStream.readObject();
 			update(announcements);
 		} catch (IOException | JSONException e) {
 			Log.w("Failed to load announcements from disk");
@@ -78,15 +77,15 @@ public class AnnouncementService extends Service {
 	}
 	
 	private void update() {
-		JSONObject announcements = updateAnnouncements();
+		Map<String, Object> announcements = updateAnnouncements();
 		if (announcements == null)
 			return;
 		update(announcements);
 	}
 	
-	private void update(JSONObject announcements) {
-		List<CardData> announcementCards = parseCards(announcements.getArray("announcements")).stream().map(this::downloadImage).collect(Collectors.toList());
-		List<CardData> serverCards = parseCards(announcements.getArray("servers")).stream().map(this::downloadImage).collect(Collectors.toList());
+	private void update(Map<String, Object> announcements) {
+		List<CardData> announcementCards = parseCards(announcements.get("announcements")).stream().map(this::downloadImage).collect(Collectors.toList());
+		List<CardData> serverCards = parseCards(announcements.get("servers")).stream().map(this::downloadImage).collect(Collectors.toList());
 		
 		Platform.runLater(() -> {
 			AnnouncementsData data = LauncherData.INSTANCE.getAnnouncements();
@@ -97,11 +96,11 @@ public class AnnouncementService extends Service {
 		});
 	}
 	
-	private List<CardData> parseCards(JSONArray descriptor) {
-		if (descriptor == null)
+	private List<CardData> parseCards(Object descriptor) {
+		if (!(descriptor instanceof List))
 			return Collections.emptyList();
 		
-		return descriptor.stream().filter(JSONObject.class::isInstance).map(JSONObject.class::cast).filter(AnnouncementService::validateCard).map(this::parseCard).collect(Collectors.toList());
+		return ((List<?>) descriptor).stream().filter(JSONObject.class::isInstance).map(JSONObject.class::cast).filter(AnnouncementService::validateCard).map(this::parseCard).collect(Collectors.toList());
 	}
 	
 	private CardData parseCard(JSONObject obj) {
@@ -144,10 +143,10 @@ public class AnnouncementService extends Service {
 	}
 	
 	private static boolean validateCard(JSONObject obj) {
-		JSONObject filter = obj.getObject("filter");
+		Map<String, Object> filter = obj.getObject("filter");
 		if (filter == null)
 			return true;
-		String os = filter.getString("os");
+		String os = (String) filter.get("os");
 		if (os != null) {
 			String currentOs = System.getProperty("os.name").toLowerCase(Locale.US);
 			switch (os.toLowerCase(Locale.US)) {
@@ -167,7 +166,7 @@ public class AnnouncementService extends Service {
 		}
 		// Inclusive
 		
-		return passesVersionCheck(filter.getString("minLauncherVersion"), (cur, b) -> cur >= b, true) && passesVersionCheck(filter.getString("maxLauncherVersion"), (cur, b) -> cur < b, false);
+		return passesVersionCheck((String) filter.get("minLauncherVersion"), (cur, b) -> cur >= b, true) && passesVersionCheck((String) filter.get("maxLauncherVersion"), (cur, b) -> cur < b, false);
 	}
 	
 	private static String parseVariables(String str) {
@@ -195,11 +194,11 @@ public class AnnouncementService extends Service {
 	/**
 	 * Stage 1: Download the file list from the update server, or fall back on the local copy. If neither are accessible, fail.
 	 */
-	private static JSONObject updateAnnouncements() {
+	private static Map<String, Object> updateAnnouncements() {
 		File localFileList = new File(LocalUtilities.getApplicationDirectory(), "announcements.json");
 		
 		Log.t("Retrieving latest announcements...");
-		JSONObject announcements;
+		Map<String, Object> announcements;
 		try (JSONInputStream in = new JSONInputStream(new URL("http", LauncherData.UPDATE_ADDRESS, 80, "/launcher/announcements.json").openStream())) {
 			announcements = in.readObject();
 			try (JSONOutputStream out = new JSONOutputStream(new FileOutputStream(localFileList))) {
