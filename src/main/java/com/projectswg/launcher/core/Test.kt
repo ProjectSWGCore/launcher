@@ -17,14 +17,18 @@
  * along with this program.  If not, see <https:></https:>//www.gnu.org/licenses/>.          *
  * *
  */
+package com.projectswg.launcher.core
 
-package com.projectswg.launcher.core.resources.gui
+import com.projectswg.launcher.core.resources.data.announcements.WebsitePostFeed
+import me.joshlarson.jlcommon.log.Log
+import me.joshlarson.jlcommon.log.log_wrapper.ConsoleLogWrapper
+import java.io.File
 
-import com.projectswg.launcher.core.resources.data.LauncherData
-import tornadofx.View
-
-class AnnouncementsView : View() {
-	
-	override val root = find<CardContainer>(mapOf(CardContainer::children to LauncherData.INSTANCE.announcements.announcementCardsProperty)).root
-	
+fun main() {
+	Log.addWrapper(ConsoleLogWrapper(Log.LogLevel.TRACE))
+	WebsitePostFeed.query("https://projectswg.com/posts/feed/") {
+		for (message in it.messages) {
+			Log.d("Article: %s", message)
+		}
+	}
 }

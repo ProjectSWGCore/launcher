@@ -23,6 +23,7 @@ package com.projectswg.launcher.core
 import com.projectswg.common.utilities.LocalUtilities
 import com.projectswg.launcher.core.resources.data.LauncherData
 import com.projectswg.launcher.core.resources.gui.NavigationView
+import com.projectswg.launcher.core.resources.gui.events.LauncherClosingEvent
 import com.projectswg.launcher.core.resources.gui.style.Style
 import com.projectswg.launcher.core.services.data.DataManager
 import com.projectswg.launcher.core.services.launcher.LauncherManager
@@ -79,6 +80,7 @@ class LauncherApp: App(NavigationView::class, Style::class) {
 	}
 	
 	override fun stop() {
+		fire(LauncherClosingEvent)
 		services.forEach { it.setIntentManager(null) }
 		intentManager.close()
 		Manager.stop(services.reversed())

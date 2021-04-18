@@ -49,14 +49,6 @@ class NavigationView : View("ProjectSWG Launcher") {
 			
 			selectedTab = selectionModel.selectedItemProperty().select { it.textProperty() }
 			
-			tab(messages["announcements"]) {
-				styleClass += "background"
-				isClosable = false
-				graphic = FontAwesomeIcon.NEWSPAPER_ALT.createGlyph(glyphSize = 24, fill = Color.LIGHTGRAY)
-				graphic.tooltip(messages["announcements"])
-				
-				this += find<AnnouncementsView>().root
-			}
 			tab(messages["servers"]) {
 				styleClass += "background"
 				isClosable = false

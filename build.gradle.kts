@@ -34,7 +34,7 @@ version = "1.3.5"
 application {
 	mainModule.set("com.projectswg.launcher")
 	mainClass.set("com.projectswg.launcher.core.LauncherKt")
-	applicationDefaultJvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx", "-Djavax.net.debug=all")
+	applicationDefaultJvmArgs = listOf("--add-opens", "javafx.graphics/javafx.scene=tornadofx")
 }
 
 repositories {
@@ -79,6 +79,8 @@ sourceSets {
 			implementation(kotlin("stdlib"))
 			implementation(kotlin("reflect"))
 			implementation(group="de.jensd", name="fontawesomefx-fontawesome", version="4.7.0-9.1.2")
+			implementation(group="com.rometools", name="rome", version="1.15.0")
+			implementation(group="org.apache.commons", name="commons-text", version="1.9")
 		}
 	}
 	test {

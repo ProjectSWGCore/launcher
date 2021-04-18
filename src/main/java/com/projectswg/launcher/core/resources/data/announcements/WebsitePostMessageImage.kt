@@ -1,5 +1,5 @@
 /***********************************************************************************
- * Copyright (C) 2018 /// Project SWG /// www.projectswg.com                       *
+ * Copyright (C) 2020 /// Project SWG /// www.projectswg.com                       *
  *                                                                                 *
  * This file is part of the ProjectSWG Launcher.                                   *
  *                                                                                 *
@@ -18,28 +18,11 @@
  *                                                                                 *
  ***********************************************************************************/
 
-package com.projectswg.launcher.core;
+package com.projectswg.launcher.core.resources.data.announcements
 
-import com.projectswg.common.network.packets.swg.holo.HoloConnectionStopped.ConnectionStoppedReason;
-import com.projectswg.holocore.client.HolocoreSocket;
-import me.joshlarson.jlcommon.concurrency.Delay;
-
-import java.net.InetAddress;
-
-public class Test {
-	
-	public static void main(String [] args) {
-		HolocoreSocket socket = new HolocoreSocket(InetAddress.getLoopbackAddress(), 44463);
-		socket.setStatusChangedCallback(((oldStatus, newStatus, reason) -> System.out.println(oldStatus + " -> " + newStatus + " || " + reason)));
-		socket.connect(10000);
-		System.out.println("Connected");
-		Delay.sleepMilli(10000);
-		System.out.println("Disconnecting...");
-		socket.disconnect(ConnectionStoppedReason.APPLICATION);
-		Delay.sleepMilli(2000);
-		System.out.println("Closing...");
-		socket.close();
-	}
-	
+enum class WebsitePostMessageImage(val descriptionStr: String, val imagePath: String) {
+	COMMUNITY("Community Update", "/graphics/pswg_icon_big.png"),
+	DEVELOPMENT("Development Update", "/graphics/pswg_icon_big.png"),
+	HOLOCORE("Holocore Update", "/graphics/pswg_icon_big.png"),
+	OPERATIONS("Operations Update", "/graphics/pswg_icon_big.png"),
 }
-
