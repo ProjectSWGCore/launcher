@@ -88,13 +88,17 @@ sourceSets {
 			implementation(group="junit", name="junit", version="4.12")
 		}
 	}
-	create("utility") {
-		dependencies {
-			implementation(group="org.bouncycastle", name="bcprov-jdk15on", version="1.60")
-			implementation(group="me.joshlarson", name="fast-json", version="3.0.1")
-			implementation(project(":zero_allocation_hashing"))
-		}
-	}
+	create("utility")
+}
+
+val utilityImplementation by configurations.getting {
+	extendsFrom(configurations.implementation.get())
+}
+
+dependencies {
+	utilityImplementation(group="org.bouncycastle", name="bcprov-jdk15on", version="1.60")
+	utilityImplementation(group="me.joshlarson", name="fast-json", version="3.0.1")
+	utilityImplementation(project(":zero_allocation_hashing"))
 }
 
 idea {
