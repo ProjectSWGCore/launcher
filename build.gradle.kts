@@ -139,6 +139,7 @@ jlink {
 		
 		imageName = "ProjectSWG"
 		installerName = "ProjectSWG"
+		installerOutputDir = File("${buildDir.absolutePath}/installer")
 		
 		installerType = when(platform) {
 			"linux" -> "deb"

@@ -18,9 +18,8 @@ jobs:
         with:
           java-version: 17
       - run: ./gradlew --no-daemon clean test jpackage
-      - run: mkdir staging && cp build/jpackage/*.* staging/
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
           name: ProjectSWG-${{matrix.os}}
-          path: staging
+          path: build/installer
