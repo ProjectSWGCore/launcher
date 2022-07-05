@@ -102,7 +102,8 @@ task("downloadJmods", de.undercouch.gradle.tasks.download.Download::class) {
 	src(baseUrl + platformUrl)
 	dest(zipPath)
 	overwrite(false)
-	tasks.getByName("jlink").dependsOn(this)
+	tasks.getByName("prepareMergedJarsDir").dependsOn(this)
+	tasks.getByName("prepareMergedJarsDir").mustRunAfter(this)
 	
 	doLast {
 		copy {
@@ -115,7 +116,10 @@ task("downloadJmods", de.undercouch.gradle.tasks.download.Download::class) {
 jlink {
 	addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
 	forceMerge("kotlin-stdlib")
-	addExtraModulePath(buildDir.absolutePath + "/jmods")
+	
+	jlink {
+		addExtraModulePath("${buildDir.absolutePath}/jmods/javafx-jmods-${javaVersion}")
+	}
 	
 	launcher {
 		name = "projectswg"
@@ -123,9 +127,22 @@ jlink {
 	}
 	
 	jpackage {
-		imageName = "projectswg"
+		vendor = "Project SWG"
+		
+		imageName = "ProjectSWG"
 		installerName = "ProjectSWG"
-		installerType = if (platform == "linux") "deb" else null
+		
+		installerType = when(platform) {
+			"linux" -> "deb"
+			"win" -> "exe"
+			"mac" -> "dmg"
+			else -> null
+		}
+		installerOptions = when(platform) {
+			"linux" -> listOf("--linux-shortcut", "--icon", "src/main/resources/graphics/ProjectSWG.png")
+			"win" -> listOf("--win-dir-chooser", "--win-shortcut", "--win-menu", "--icon", "src/main/resources/graphics/ProjectSWG.ico")
+			else -> listOf("--icon", "src/main/resources/graphics/ProjectSWG.png")
+		}
 	}
 }
 
