@@ -144,6 +144,16 @@ class ServerListView : View() {
 								}
 							}
 						}
+						progressbar {
+							val updateStatus = LauncherData.INSTANCE.login.activeServerProperty.select { it.updateServerProperty }
+							visibleWhen { updateStatus.select { it.statusProperty }.select { ReadOnlyBooleanWrapper(it == UpdateServer.UpdateServerStatus.DOWNLOADING) } }
+							prefHeight = 12.0
+							maxHeight = 12.0
+							maxWidth = Double.POSITIVE_INFINITY
+							
+							progressProperty().bind(updateStatus.select { it.downloadProgressProperty })
+							isFillWidth = true
+						}
 					}
 					button("Play") { // TODO: Get proper string for this
 						isFillWidth = true

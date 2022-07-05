@@ -89,7 +89,8 @@ class DownloadService : Service() {
 			dataTransferredBinding = dataTransferredBinding.add(downloadAmount)
 			threadPool.execute { download(file, fileLockPool, downloadAmount, running) }
 		}
-		dpi.server.downloadProgressProperty.bind(dataTransferredBinding.divide(files.stream().mapToLong { it.length }.sum().toDouble()))
+		val totalDownloadSize = files.stream().mapToLong { it.length }.sum().toDouble()
+		Platform.runLater { dpi.server.downloadProgressProperty.bind(dataTransferredBinding.divide(totalDownloadSize)) }
 		
 		// Waits for all files to complete, then is able to grab the one remaining lock
 		try {

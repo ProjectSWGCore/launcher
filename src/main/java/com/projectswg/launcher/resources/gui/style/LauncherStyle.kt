@@ -110,6 +110,9 @@ class Style : Stylesheet() {
 			highlightFill = additionalColorPrimary
 			textFill = textColorPrimary
 		}
+		s(progressBar child bar) {
+			backgroundColor += additionalColorSecondary
+		}
 		
 		// ComboBox, Button, and ScrollBar button styling
 		s(  comboBox,
