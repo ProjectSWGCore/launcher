@@ -1,5 +1,5 @@
 name: Package
-on: push
+on: release
 
 jobs:
   build-app:
