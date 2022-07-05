@@ -90,6 +90,8 @@ class PreferencesDataService : Service() {
 			loadSettingsGeneral(mapOf())
 			loadSettingsLogin(mapOf())
 			loadSettingsForwarder(mapOf())
+			lastSelectedServerName = ""
+			localServerConfiguration = mapOf()
 		}
 		
 		loadServers()
