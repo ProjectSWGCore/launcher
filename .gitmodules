@@ -4,9 +4,3 @@
 [submodule "forwarder"]
 	path = forwarder
 	url = https://github.com/ProjectSWGCore/forwarder.git
-[submodule "client-holocore"]
-	path = client-holocore
-	url = https://github.com/ProjectSWGCore/client-holocore.git
-[submodule "zero_allocation_hashing"]
-	path = zero_allocation_hashing
-	url = https://github.com/Josh-Larson/Zero-Allocation-Hashing.git

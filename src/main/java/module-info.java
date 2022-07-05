@@ -4,13 +4,11 @@ open module com.projectswg.launcher {
 	requires me.joshlarson.jlcommon;
 	requires me.joshlarson.jlcommon.javafx;
 	requires fast.json;
-	requires net.openhft.hashing;
 	requires org.bouncycastle.provider;
 	requires org.jetbrains.annotations;
 	
 	requires com.projectswg.common;
 	requires com.projectswg.forwarder;
-	requires com.projectswg.holocore.client;
 	
 	requires jdk.crypto.ec;
 	requires java.prefs;
@@ -25,6 +23,4 @@ open module com.projectswg.launcher {
 	
 	requires kotlin.stdlib;
 	requires kotlin.reflect;
-	
-	exports com.projectswg.launcher.core.resources.data.forwarder;
 }
