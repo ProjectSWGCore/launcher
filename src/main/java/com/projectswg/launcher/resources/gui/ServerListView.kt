@@ -134,13 +134,13 @@ class ServerListView : View() {
 								maxWidthProperty().bind(targetWidthProperty)
 								
 								setOnAction {
-									DownloadPatchIntent(LauncherData.INSTANCE.login.activeServer.updateServer ?: return@setOnAction).broadcast()
+									DownloadPatchIntent(LauncherData.INSTANCE.login.activeServer?.updateServer ?: return@setOnAction).broadcast()
 								}
 							}
 							button("Scan") {
 								minWidth = 75.0
 								setOnAction {
-									RequestScanIntent(LauncherData.INSTANCE.login.activeServer.updateServer ?: return@setOnAction).broadcast()
+									RequestScanIntent(LauncherData.INSTANCE.login.activeServer?.updateServer ?: return@setOnAction).broadcast()
 								}
 							}
 						}
@@ -150,9 +150,10 @@ class ServerListView : View() {
 						maxWidth = Double.POSITIVE_INFINITY
 						
 						setOnAction {
-							val gameInstance = GameInstance(LauncherData.INSTANCE.login.activeServer)
-							gameInstance.forwarder.data.username = LauncherData.INSTANCE.login.activeServer.authentication.username
-							gameInstance.forwarder.data.password = LauncherData.INSTANCE.login.activeServer.authentication.password
+							val activeServer = LauncherData.INSTANCE.login.activeServer ?: return@setOnAction
+							val gameInstance = GameInstance(activeServer)
+							gameInstance.forwarder.data.username = activeServer.authentication.username
+							gameInstance.forwarder.data.password = activeServer.authentication.password
 							gameInstance.start()
 							GameLaunchedIntent(gameInstance).broadcast()
 						}
@@ -216,7 +217,7 @@ class ServerListView : View() {
 								hgrow = Priority.ALWAYS
 							}
 							setOnAction {
-								val updateServer = LauncherData.INSTANCE.login.activeServer.updateServer ?: return@setOnAction
+								val updateServer = LauncherData.INSTANCE.login.activeServer?.updateServer ?: return@setOnAction
 								ProcessExecutor.INSTANCE.buildProcess(updateServer, "SwgClientSetup_r.exe")
 							}
 						}

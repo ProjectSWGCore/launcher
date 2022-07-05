@@ -43,7 +43,7 @@ class LoginData {
 	
 	val localServerProperty = SimpleObjectProperty<LoginServer>()
 	
-	var activeServer: LoginServer by activeServerProperty
+	var activeServer: LoginServer? by activeServerProperty
 	val lastSelectedServer: String by lastSelectedServerProperty
 	
 	var localServer: LoginServer by localServerProperty
