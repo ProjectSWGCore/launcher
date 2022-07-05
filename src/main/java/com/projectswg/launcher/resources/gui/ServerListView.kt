@@ -28,6 +28,7 @@ import com.projectswg.launcher.resources.gui.events.LauncherNewVersionEvent
 import com.projectswg.launcher.resources.gui.servers.LauncherUpdatePopup
 import com.projectswg.launcher.resources.gui.servers.WebsitePostFeedList
 import com.projectswg.launcher.resources.gui.style.Style
+import com.projectswg.launcher.resources.intents.CancelDownloadIntent
 import com.projectswg.launcher.resources.intents.DownloadPatchIntent
 import com.projectswg.launcher.resources.intents.GameLaunchedIntent
 import com.projectswg.launcher.resources.intents.RequestScanIntent
@@ -137,8 +138,22 @@ class ServerListView : View() {
 									DownloadPatchIntent(LauncherData.INSTANCE.login.activeServer?.updateServer ?: return@setOnAction).broadcast()
 								}
 							}
+							button("Cancel") {
+								val targetWidthProperty = updateStatus.select { ReadOnlyDoubleWrapper(if (it == UpdateServer.UpdateServerStatus.DOWNLOADING) 75.0 else 0.0) }
+								visibleWhen { updateStatus.select { ReadOnlyBooleanWrapper(it == UpdateServer.UpdateServerStatus.DOWNLOADING) } }
+								minWidthProperty().bind(targetWidthProperty)
+								maxWidthProperty().bind(targetWidthProperty)
+								
+								setOnAction {
+									CancelDownloadIntent(LauncherData.INSTANCE.login.activeServer?.updateServer ?: return@setOnAction).broadcast()
+								}
+							}
 							button("Scan") {
-								minWidth = 75.0
+								val targetWidthProperty = updateStatus.select { ReadOnlyDoubleWrapper(if (it != UpdateServer.UpdateServerStatus.DOWNLOADING) 75.0 else 0.0) }
+								visibleWhen { updateStatus.select { ReadOnlyBooleanWrapper(it != UpdateServer.UpdateServerStatus.DOWNLOADING) } }
+								minWidthProperty().bind(targetWidthProperty)
+								maxWidthProperty().bind(targetWidthProperty)
+								
 								setOnAction {
 									RequestScanIntent(LauncherData.INSTANCE.login.activeServer?.updateServer ?: return@setOnAction).broadcast()
 								}
