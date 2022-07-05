@@ -1,0 +1,24 @@
+name: Package
+on: release
+
+jobs:
+  build-app:
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-20.04, windows-latest]
+    name: Package
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+      - run: ./gradlew --no-daemon clean test jpackage
+      - run: mkdir staging && cp build/jpackage/* staging/
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: ProjectSWG-${{matrix.os}}
+          path: staging
