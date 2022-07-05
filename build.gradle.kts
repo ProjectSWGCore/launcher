@@ -18,6 +18,11 @@ val platform: String = when {
 	osName.startsWith("Linux", ignoreCase = true) -> "linux"
 	else -> ""
 }
+println("Configuration:")
+println("    Java Version:       $javaVersion")
+println("    Java Major Version: $javaMajorVersion")
+println("    Kotlin Target:      $kotlinTargetJdk")
+println("    Platform:           $platform")
 
 subprojects {
 	ext {
