@@ -42,15 +42,6 @@ class SettingsGeneralView : View() {
 		
 		hbox {
 			addClass(Style.settingsRow)
-			label(messages["settings.general.locale"])
-			combobox {
-				items.setAll(Locale.ENGLISH, Locale.GERMAN)
-				valueProperty().bindBidirectional(data.localeProperty)
-			}
-		}
-		
-		hbox {
-			addClass(Style.settingsRow)
 			label(messages["settings.general.wine"])
 			val winePathTextField = textfield {
 				isDisable = true

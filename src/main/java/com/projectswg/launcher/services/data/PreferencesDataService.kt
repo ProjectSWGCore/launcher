@@ -105,7 +105,6 @@ class PreferencesDataService : Service() {
 	}
 	
 	private fun loadSettingsGeneral(settings: Map<String, Any?>) {
-		LauncherData.INSTANCE.general.locale = Locale.forLanguageTag(settings.getString("locale", Locale.US.toLanguageTag()))
 		LauncherData.INSTANCE.general.wine = settings.getString("wine", "")
 		LauncherData.INSTANCE.general.isAdmin = settings.getBool("admin", false)
 	}
@@ -241,7 +240,6 @@ class PreferencesDataService : Service() {
 	
 	private fun jsonSettingsGeneral(): Map<String, Any?> {
 		return mapOf(
-			"locale" to LauncherData.INSTANCE.general.locale.toLanguageTag(),
 			"wine" to LauncherData.INSTANCE.general.wine,
 			"admin" to LauncherData.INSTANCE.general.isAdmin
 		)

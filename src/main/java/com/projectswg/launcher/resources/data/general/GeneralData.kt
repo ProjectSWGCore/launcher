@@ -28,12 +28,12 @@ import tornadofx.setValue
 
 class GeneralData {
 	
-	val localeProperty = SimpleObjectProperty(Locale.getDefault())
+	val localeProperty = SimpleObjectProperty(Locale.ENGLISH)
 	val wineProperty = SimpleStringProperty()
 	val adminProperty = SimpleBooleanProperty(false)
 	val remoteVersionProperty = SimpleStringProperty("")
 	
-	var locale: Locale by localeProperty
+	val locale: Locale by localeProperty
 	var wine: String? by wineProperty
 	var isAdmin: Boolean by adminProperty
 	var remoteVersion: String by remoteVersionProperty
