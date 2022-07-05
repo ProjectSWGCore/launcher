@@ -1,5 +1,5 @@
 name: Package
-on: release
+on: push
 
 jobs:
   build-app:
@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          submodules: true
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
