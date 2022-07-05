@@ -66,9 +66,12 @@ sourceSets {
 			implementation(project(":forwarder"))
 			implementation("javax.json:javax.json-api:1.1.4")
 			implementation(group="me.joshlarson", name="fast-json", version="3.0.1")
-			implementation(group="me.joshlarson", name="jlcommon-fx", version="17.0.0")
+			implementation(group="me.joshlarson", name="jlcommon-fx", version="17.0.0") {
+				exclude(group="org.openjfx")
+			}
 			implementation(group="no.tornado", name="tornadofx", version="2.0.0-SNAPSHOT") {
 				exclude(group="org.jetbrains.kotlin")
+				exclude(group="org.openjfx")
 			}
 			implementation(kotlin("stdlib"))
 			implementation(kotlin("reflect"))
