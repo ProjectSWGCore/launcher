@@ -115,13 +115,9 @@ class ServerListView : View() {
 							passwordfield(LauncherData.INSTANCE.login.activeServerProperty.select { it.authenticationProperty }.select { it.passwordProperty })
 						}
 						field(messages["servers.column.remoteStatus"]) {
-							val loginName = LauncherData.INSTANCE.login.activeServerProperty.select { it.instanceInfo.loginNameProperty }
 							val loginStatus = LauncherData.INSTANCE.login.activeServerProperty.select { it.instanceInfo.loginStatusProperty }
-							val loginNameExists = loginName.select { ReadOnlyBooleanWrapper(it.isNotEmpty()) }
-							val loginStatusWithBrackets = loginStatus.select { ReadOnlyStringWrapper(if (loginNameExists.value) "[$it]" else it) }
-							val remoteStatus = loginName.stringBinding(loginStatusWithBrackets) { (if (loginNameExists.value) "$it " else "") + loginStatusWithBrackets.value }
 							
-							label(remoteStatus) {
+							label(loginStatus) {
 								maxWidth = Double.POSITIVE_INFINITY
 								isFillWidth = true
 								
