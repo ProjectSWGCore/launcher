@@ -26,10 +26,12 @@ import tornadofx.setValue
 
 class LoginServerInstanceInfo {
 	
+	val loginNameProperty = SimpleStringProperty("")
 	val loginStatusProperty = SimpleStringProperty("")
 	val updateStatusProperty = SimpleStringProperty("")
 	val readyToPlayProperty = SimpleBooleanProperty(false)
 	
+	var loginName: String by loginNameProperty
 	var loginStatus: String by loginStatusProperty
 	var updateStatus: String by updateStatusProperty
 	var isReadyToPlay: Boolean by readyToPlayProperty

@@ -20,6 +20,7 @@
 
 package com.projectswg.launcher.resources.gui
 
+import com.projectswg.common.data.encodables.galaxy.Galaxy
 import com.projectswg.launcher.resources.data.LauncherData
 import com.projectswg.launcher.resources.data.update.UpdateServer
 import com.projectswg.launcher.resources.game.GameInstance
@@ -112,6 +113,29 @@ class ServerListView : View() {
 						}
 						field(messages["servers.login.form.password"]) {
 							passwordfield(LauncherData.INSTANCE.login.activeServerProperty.select { it.authenticationProperty }.select { it.passwordProperty })
+						}
+						field(messages["servers.column.remoteStatus"]) {
+							val loginName = LauncherData.INSTANCE.login.activeServerProperty.select { it.instanceInfo.loginNameProperty }
+							val loginStatus = LauncherData.INSTANCE.login.activeServerProperty.select { it.instanceInfo.loginStatusProperty }
+							val loginNameExists = loginName.select { ReadOnlyBooleanWrapper(it.isNotEmpty()) }
+							val loginStatusWithBrackets = loginStatus.select { ReadOnlyStringWrapper(if (loginNameExists.value) "[$it]" else it) }
+							val remoteStatus = loginName.stringBinding(loginStatusWithBrackets) { (if (loginNameExists.value) "$it " else "") + loginStatusWithBrackets.value }
+							
+							label(remoteStatus) {
+								maxWidth = Double.POSITIVE_INFINITY
+								isFillWidth = true
+								
+								textFillProperty().bind(loginStatus.select { when (it) {
+									Galaxy.GalaxyStatus.UP.name -> ReadOnlyObjectWrapper(Color.rgb(0, 255, 0))
+									Galaxy.GalaxyStatus.DOWN.name -> ReadOnlyObjectWrapper(Color.RED)
+									Galaxy.GalaxyStatus.FULL.name -> ReadOnlyObjectWrapper(Color.YELLOW)
+									else -> ReadOnlyObjectWrapper(Color.WHITE)
+								} })
+								
+								style {
+									fontWeight = FontWeight.BOLD
+								}
+							}
 						}
 						field(messages["servers.column.localStatus"]) {
 							val updateStatus = LauncherData.INSTANCE.login.activeServerProperty.select { it.updateServerProperty }.select { it.statusProperty }
