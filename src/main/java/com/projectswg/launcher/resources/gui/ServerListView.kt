@@ -36,6 +36,7 @@ import javafx.beans.property.ReadOnlyBooleanWrapper
 import javafx.beans.property.ReadOnlyDoubleWrapper
 import javafx.beans.property.ReadOnlyObjectWrapper
 import javafx.beans.property.ReadOnlyStringWrapper
+import javafx.geometry.Insets
 import javafx.geometry.Pos
 import javafx.scene.layout.Priority
 import javafx.scene.paint.Color
@@ -55,6 +56,7 @@ class ServerListView : View() {
 		addClass(Style.serverList)
 		
 		hbox {
+			padding = Insets(10.0)
 			isFillWidth = true
 			
 			vbox leftBox@ {
@@ -76,7 +78,7 @@ class ServerListView : View() {
 				this += feedList.root
 			}
 			region {
-				prefWidth = 5.0
+				prefWidth = 25.0
 			}
 			vbox rightBox@ {
 				prefWidthProperty().bind(this@hbox.widthProperty().subtract(5).divide(2))

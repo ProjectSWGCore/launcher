@@ -34,8 +34,8 @@ class NavigationView : View("ProjectSWG Launcher") {
 		addClass(Style.background)
 		
 		tabpane {
-			prefWidth = 825.0
-			prefHeight = 400.0
+			prefWidth = 900.0
+			prefHeight = 450.0
 			vgrow = Priority.ALWAYS
 			side = Side.LEFT
 			

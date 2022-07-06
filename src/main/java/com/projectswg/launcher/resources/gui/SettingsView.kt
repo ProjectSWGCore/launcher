@@ -25,14 +25,18 @@ import com.projectswg.launcher.resources.gui.settings.SettingsGeneralView
 import com.projectswg.launcher.resources.gui.settings.SettingsLoginView
 import com.projectswg.launcher.resources.gui.settings.SettingsUpdateView
 import com.projectswg.launcher.resources.gui.style.Style
+import javafx.geometry.Insets
 import tornadofx.*
 
 class SettingsView : View() {
 	
 	override val root = scrollpane {
 		isFitToWidth = true
+		isFitToHeight = true
+		
 		vbox {
 			addClass(Style.background)
+			padding = Insets(10.0)
 			
 			children.add(find<SettingsGeneralView>().root)
 			separator()
@@ -43,5 +47,4 @@ class SettingsView : View() {
 			children.add(find<SettingsForwarderView>().root)
 		}
 	}
-	
 }
