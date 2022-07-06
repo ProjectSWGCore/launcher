@@ -149,7 +149,7 @@ jlink {
 		}
 		installerOptions = when(platform) {
 			"linux" -> listOf("--linux-shortcut", "--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.png")
-			"win" -> listOf("--win-dir-chooser", "--win-shortcut", "--win-menu", "--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.ico")
+			"win" -> listOf("--win-dir-chooser", "--win-shortcut", "--win-menu", "--win-menu-group", "Project SWG", "--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.ico")
 			else -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.png")
 		}
 	}
