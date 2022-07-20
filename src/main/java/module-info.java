@@ -1,6 +1,5 @@
 open module com.projectswg.launcher {
 	requires javafx.controls;
-	requires javafx.fxml;
 	requires me.joshlarson.jlcommon;
 	requires me.joshlarson.jlcommon.javafx;
 	requires fast.json;

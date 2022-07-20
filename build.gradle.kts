@@ -53,7 +53,7 @@ sourceSets {
 			val jfxOptions = object {
 				val group = "org.openjfx"
 				val version = javaVersion
-				val fxModules = arrayListOf("javafx-base", "javafx-graphics", "javafx-controls", "javafx-fxml", "javafx-swing", "javafx-web", "javafx-media")
+				val fxModules = arrayListOf("javafx-base", "javafx-graphics", "javafx-controls")
 			}
 			jfxOptions.run {
 				fxModules.forEach {
@@ -65,8 +65,8 @@ sourceSets {
 			implementation(project(":pswgcommon"))
 			implementation(project(":forwarder"))
 			implementation("javax.json:javax.json-api:1.1.4")
-			implementation(group="me.joshlarson", name="fast-json", version="3.0.1")
-			implementation(group="me.joshlarson", name="jlcommon-fx", version="17.0.0") {
+			implementation(group="me.joshlarson", name="fast-json", version="3.0.2")
+			implementation(group="me.joshlarson", name="jlcommon-fx", version="17.0.1") {
 				exclude(group="org.openjfx")
 			}
 			implementation(group="no.tornado", name="tornadofx", version="2.0.0-SNAPSHOT") {
@@ -76,8 +76,11 @@ sourceSets {
 			implementation(kotlin("stdlib"))
 			implementation(kotlin("reflect"))
 			implementation(group="de.jensd", name="fontawesomefx-fontawesome", version="4.7.0-9.1.2")
-			implementation(group="com.rometools", name="rome", version="1.15.0")
+			implementation(group="com.rometools", name="rome", version="1.15.0") {
+				exclude(group="org.slf4j")
+			}
 			implementation(group="org.apache.commons", name="commons-text", version="1.9")
+			implementation("org.slf4j:slf4j-nop:1.7.36")
 		}
 	}
 	test {
@@ -122,7 +125,7 @@ task("downloadJmods", de.undercouch.gradle.tasks.download.Download::class) {
 }
 
 jlink {
-	addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+	addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages", "--ignore-signing-information")
 	forceMerge("kotlin-stdlib")
 	
 	jlink {
