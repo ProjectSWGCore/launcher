@@ -2,14 +2,14 @@ plugins {
 	application
 	java
 	idea
-	kotlin("jvm") version "1.7.0"
+	kotlin("jvm") version "1.7.10"
 	id("org.beryx.jlink") version "2.25.0"
 	id("de.undercouch.download") version "5.0.5"
 }
 
-val javaVersion = "17"
-val javaMajorVersion = "17"
-val kotlinTargetJdk = "17"
+val javaVersion = "18.0.2"
+val javaMajorVersion = "18"
+val kotlinTargetJdk = "18"
 
 val osName: String = System.getProperty("os.name")
 val platform: String = when {
