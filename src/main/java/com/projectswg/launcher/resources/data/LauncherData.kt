@@ -44,7 +44,7 @@ enum class LauncherData {
 		get() = FX.application
 	
 	companion object {
-		const val VERSION = "2.1.1"
+		const val VERSION = "2.1.2"
 		
 		fun getApplicationDataDirectory(): File {
 			return when (getOS()) {

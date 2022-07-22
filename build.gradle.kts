@@ -33,7 +33,7 @@ subprojects {
 }
 
 group = "com.projectswg.launcher"
-version = "2.1.1"
+version = "2.1.2"
 
 application {
 	mainModule.set("com.projectswg.launcher")
