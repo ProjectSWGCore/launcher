@@ -152,12 +152,15 @@ jlink {
 		}
 		imageOptions = when(platform) {
 			"win" -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.ico")
-			else -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.png")
+			"linux" -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.png")
+			"mac" -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.icns")
+			else -> throw IllegalStateException("Unsupported platform: $platform")
 		}
 		installerOptions = when(platform) {
 			"linux" -> listOf("--linux-shortcut", "--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.png")
 			"win" -> listOf("--win-dir-chooser", "--win-shortcut", "--win-menu", "--win-menu-group", "Project SWG", "--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.ico")
-			else -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.png")
+			"mac" -> listOf("--icon", "${projectDir.absolutePath}/src/main/resources/graphics/ProjectSWG.icns")
+			else -> throw IllegalStateException("Unsupported platform: $platform")
 		}
 	}
 }
