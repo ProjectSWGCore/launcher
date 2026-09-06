@@ -9,7 +9,6 @@ open module com.projectswg.launcher {
 	requires com.projectswg.common;
 	requires com.projectswg.forwarder;
 	
-	requires jdk.crypto.ec;
 	requires java.prefs;
 	requires java.net.http;
 	requires java.xml;

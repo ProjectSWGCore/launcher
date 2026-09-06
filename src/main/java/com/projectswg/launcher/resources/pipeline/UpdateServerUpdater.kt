@@ -104,7 +104,7 @@ object UpdateServerUpdater {
 	 * Stage 2: Scan each file and only keep the ones that need to be downloaded.
 	 */
 	private fun filterValidFiles(info: UpdateServerDownloaderInfo) {
-		val files: MutableList<RequiredFile> = Objects.requireNonNull<MutableList<RequiredFile>?>(info.files, "File list was not read correctly")
+		val files: MutableList<RequiredFile> = info.files ?: throw NullPointerException("File list was not read correctly")
 		Log.d("%d known files. Scanning...", files.size)
 		val total = files.size
 		Platform.runLater { info.server.status = UpdateServerStatus.SCANNING }

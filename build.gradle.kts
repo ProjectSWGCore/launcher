@@ -1,15 +1,18 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
 	application
 	java
 	idea
-	kotlin("jvm") version "1.7.10"
-	id("org.beryx.jlink") version "2.25.0"
-	id("de.undercouch.download") version "5.0.5"
+	kotlin("jvm") version "2.4.10"
+	id("org.beryx.jlink") version "4.1.1"
+	id("de.undercouch.download") version "5.7.0"
 }
 
-val javaVersion = "18.0.2"
-val javaMajorVersion = "18"
-val kotlinTargetJdk = "18"
+val javaVersion = JavaVersion.current()
+val javafxVersion = JavaVersion.current()
+val kotlinTargetJdk = JvmTarget.JVM_26
+val junit5Version = "5.12.2"
 
 val osName: String = System.getProperty("os.name")
 val platform: String = when {
@@ -20,14 +23,15 @@ val platform: String = when {
 }
 println("Configuration:")
 println("    Java Version:       $javaVersion")
-println("    Java Major Version: $javaMajorVersion")
+println("    JavaFX Version:     $javafxVersion")
 println("    Kotlin Target:      $kotlinTargetJdk")
 println("    Platform:           $platform")
 
 subprojects {
 	ext {
 		set("javaVersion", javaVersion)
-		set("javaMajorVersion", javaMajorVersion)
+		set("javafxVersion", javafxVersion)
+		set("junit5Version", junit5Version)
 		set("kotlinTargetJdk", kotlinTargetJdk)
 	}
 }
@@ -43,7 +47,6 @@ application {
 
 repositories {
 	maven("https://dev.joshlarson.me/maven2")
-	maven("https://oss.sonatype.org/content/repositories/snapshots")
 	mavenCentral()
 }
 
@@ -52,8 +55,8 @@ sourceSets {
 		dependencies {
 			val jfxOptions = object {
 				val group = "org.openjfx"
-				val version = javaVersion
-				val fxModules = arrayListOf("javafx-base", "javafx-graphics", "javafx-controls")
+				val version = javafxVersion
+				val fxModules = arrayListOf("javafx-base", "javafx-graphics", "javafx-controls", "javafx-fxml", "javafx-media", "javafx-swing", "javafx-web")
 			}
 			jfxOptions.run {
 				fxModules.forEach {
@@ -61,37 +64,38 @@ sourceSets {
 				}
 			}
 			
-			implementation(group="org.jetbrains", name="annotations", version="20.1.0")
+			implementation("org.jetbrains:annotations:20.1.0")
 			implementation(project(":pswgcommon"))
 			implementation(project(":forwarder"))
 			implementation("javax.json:javax.json-api:1.1.4")
-			implementation(group="me.joshlarson", name="fast-json", version="3.0.2")
-			implementation(group="me.joshlarson", name="jlcommon-fx", version="17.0.1") {
+			implementation("me.joshlarson:fast-json:3.0.2")
+			implementation("me.joshlarson:jlcommon-fx:17.0.1") {
 				exclude(group="org.openjfx")
 			}
-			implementation(group="no.tornado", name="tornadofx", version="2.0.0-SNAPSHOT") {
-				exclude(group="org.jetbrains.kotlin")
-				exclude(group="org.openjfx")
-			}
+			implementation(project(":tornadofx"))
 			implementation(kotlin("stdlib"))
 			implementation(kotlin("reflect"))
-			implementation(group="de.jensd", name="fontawesomefx-fontawesome", version="4.7.0-9.1.2")
-			implementation(group="com.rometools", name="rome", version="1.15.0") {
+			implementation("de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2")
+			implementation("com.rometools:rome:1.15.0") {
 				exclude(group="org.slf4j")
 			}
-			implementation(group="org.apache.commons", name="commons-text", version="1.9")
+			implementation("org.apache.commons:commons-text:1.9")
 			implementation("org.slf4j:slf4j-nop:1.7.36")
+			
+			testImplementation("org.junit.jupiter:junit-jupiter-api:$junit5Version")
+			testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit5Version")
+			testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.12.2")
+			testImplementation("org.junit.jupiter:junit-jupiter-params:$junit5Version")
 		}
 	}
 	test {
 		dependencies {
-			testImplementation(group="junit", name="junit", version="4.12")
+			testImplementation("junit:junit:4.12")
 		}
 	}
 }
 
 idea {
-	targetVersion = javaVersion
     module {
         inheritOutputDirs = true
     }
@@ -99,22 +103,21 @@ idea {
 
 java {
 	modularity.inferModulePath.set(true)
+	toolchain.languageVersion.set(JavaLanguageVersion.of(javaVersion.majorVersion))
 }
 
-task("downloadJmods", de.undercouch.gradle.tasks.download.Download::class) {
-	val zipPath = buildDir.absolutePath + "/jmods.zip"
-	val unzipPath = buildDir.absolutePath + "/jmods"
-	val baseUrl = "https://download2.gluonhq.com/openjfx/$javaVersion/"
+val downloadJmods = tasks.register("downloadJmods", de.undercouch.gradle.tasks.download.Download::class) {
+	val zipPath = layout.buildDirectory.file("jmods.zip").get().asFile
+	val unzipPath = layout.buildDirectory.dir("jmods").get().asFile
+	val baseUrl = "https://download2.gluonhq.com/openjfx/$javafxVersion/"
 	val platformUrl = when(platform) {
-		"mac" -> "openjfx-${javaVersion}_osx-x64_bin-jmods.zip"
-		"win" -> "openjfx-${javaVersion}_windows-x64_bin-jmods.zip"
-		else -> "openjfx-${javaVersion}_linux-x64_bin-jmods.zip"
+		"mac" -> "openjfx-${javafxVersion}_osx-x64_bin-jmods.zip"
+		"win" -> "openjfx-${javafxVersion}_windows-x64_bin-jmods.zip"
+		else -> "openjfx-${javafxVersion}_linux-x64_bin-jmods.zip"
 	}
 	src(baseUrl + platformUrl)
 	dest(zipPath)
 	overwrite(false)
-	tasks.getByName("prepareMergedJarsDir").dependsOn(this)
-	tasks.getByName("prepareMergedJarsDir").mustRunAfter(this)
 	
 	doLast {
 		copy {
@@ -124,12 +127,17 @@ task("downloadJmods", de.undercouch.gradle.tasks.download.Download::class) {
 	}
 }
 
+tasks.named("prepareMergedJarsDir") {
+	dependsOn(downloadJmods)
+	mustRunAfter(downloadJmods)
+}
+
 jlink {
-	addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages", "--ignore-signing-information")
+	addOptions("--strip-debug", "--compress", "zip-6", "--no-header-files", "--no-man-pages", "--ignore-signing-information")
 	forceMerge("kotlin-stdlib")
 	
 	jlink {
-		addExtraModulePath("${buildDir.absolutePath}/jmods/javafx-jmods-${javaVersion}")
+		addExtraModulePath(layout.buildDirectory.dir("jmods/javafx-jmods-${javafxVersion}").get().asFile.absolutePath)
 	}
 	
 	launcher {
@@ -142,7 +150,7 @@ jlink {
 		
 		imageName = "ProjectSWG"
 		installerName = "ProjectSWG"
-		installerOutputDir = File("${buildDir.absolutePath}/installer")
+		setInstallerOutputDir(layout.buildDirectory.dir("installer").get().asFile)
 		
 		installerType = when(platform) {
 			"linux" -> "deb"
@@ -163,8 +171,14 @@ jlink {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-	kotlinOptions {
-		jvmTarget = kotlinTargetJdk
+	compilerOptions {
+		jvmTarget.set(kotlinTargetJdk)
 	}
-	destinationDirectory.set(File(destinationDirectory.get().asFile.path.replace("kotlin", "java")))
+}
+
+// Make Kotlin classes visible while javac compiles the JPMS module descriptor.
+tasks.named<JavaCompile>("compileJava") {
+	options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+		listOf("--patch-module", "com.projectswg.launcher=${sourceSets.main.get().output.asPath}")
+	})
 }
